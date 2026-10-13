@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>잃어버린 반쪽을 찾아라!! | 덕수궁</title>
-<meta name="description" content="사진 속 건물의 반쪽과 셀카를 찍어 완성해보세요. 덕수궁 곳곳에서 같은 건물을 찾아보세요!">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<title>잃어버린 반쪽을 찾아라 | KDB생명보험지부 2026 임시대의원대회</title>
+<meta name="description" content="KDB생명보험지부 2026년 임시대의원대회 · 덕수궁 사진 미션">
+<meta name="theme-color" content="#f5f2ec">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script>
 // 새 버전 자동 반영: 배포할 때 APP_VERSION 과 version.json 의 v 를 같이 올릴 것
-const APP_VERSION = '3';
+const APP_VERSION = '4';
 fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
   const u = new URL(location.href);
   if (v !== APP_VERSION && u.searchParams.get('v') !== v) {
@@ -28,223 +28,318 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
 </script>
 <style>
   :root {
-    --ink: #4a2c1d;
-    --sky: #e6f5fd;
-    --green: #2c7a3a;
-    --pink: #ec3f73;
-    --blue: #1f86d0;
-    --muted: #b9b9b9;
+    --bg: #f5f2ec;
+    --surface: #ffffff;
+    --ink: #1d2622;
+    --ink-2: #5b6661;
+    --ink-3: #98a19c;
+    --line: #e7e2d8;
+    --brand: #1f5d43;        /* 궁궐 소나무색 */
+    --brand-soft: #e5efe9;
+    --accent: #d8485f;       /* 단청 홍색 */
+    --gold: #c9a24a;
+    --m1: #d8485f; --m2: #2f6bc9; --m3: #2d8a5a;
+    --radius: 20px;
+    --shadow: 0 1px 2px rgba(29,38,34,.04), 0 8px 24px -12px rgba(29,38,34,.18);
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; }
   body {
-    font-family: "Jua", system-ui, sans-serif;
-    color: var(--ink);
-    background: linear-gradient(#cfeefc 0, #f4fbff 260px, #fffdf6 100%);
-    min-height: 100vh;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, system-ui, sans-serif;
+    color: var(--ink); background: var(--bg);
+    min-height: 100vh; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em;
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
-  header { text-align: center; padding: 28px 16px 8px; }
-  h1 { margin: 0; font-size: clamp(30px, 9vw, 52px); font-weight: 400; line-height: 1.15; letter-spacing: -1px;
-       text-shadow: 3px 3px 0 #fff, -3px -3px 0 #fff, 3px -3px 0 #fff, -3px 3px 0 #fff; }
-  h1 .a { color: #1d5fc9; } h1 .b { color: var(--pink); } h1 .c { color: var(--ink); } h1 .d { color: var(--green); }
-  .lead { margin: 10px 0 14px; font-size: 18px; }
-  .ribbon { display: inline-block; background: var(--green); color: #fff; padding: 9px 20px; border-radius: 999px; font-size: 17px; }
-  .ribbon em { font-style: normal; color: #ffe14d; }
+  button { font: inherit; color: inherit; }
 
-  main { max-width: 1100px; margin: 0 auto; padding: 18px 16px 40px;
-         display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
-  .card { border-radius: 22px; padding: 14px 14px 16px; border: 3px solid; background: #fff; }
-  .card[data-c="pink"]  { border-color: #f8c8d6; background: #fff5f8; --accent: var(--pink); }
-  .card[data-c="blue"]  { border-color: #bfe3f7; background: #f2faff; --accent: var(--blue); }
-  .card[data-c="green"] { border-color: #cbe9be; background: #f6fcf2; --accent: var(--green); }
-  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-  .badge { background: var(--accent); color: #fff; border-radius: 999px; padding: 5px 16px; font-size: 22px; }
-  .card-head span:last-child { font-size: 20px; }
+  /* ---------- 헤더 ---------- */
+  header { max-width: 640px; margin: 0 auto; padding: 28px 20px 8px; }
+  .event { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; font-weight: 600; color: var(--brand); }
+  .event .org { background: var(--brand); color: #fff; padding: 5px 10px; border-radius: 999px; letter-spacing: 0; }
+  .event .name { color: var(--ink-2); }
+  h1 { margin: 18px 0 10px; font-size: clamp(30px, 8.6vw, 40px); line-height: 1.18; font-weight: 800; letter-spacing: -0.04em; }
+  h1 em { font-style: normal; color: var(--accent); position: relative; }
+  h1 em::after { content: ""; position: absolute; left: -2px; right: -2px; bottom: 4px; height: 10px; background: rgba(216,72,95,.14); border-radius: 3px; z-index: -1; }
+  .lead { margin: 0; font-size: 15.5px; line-height: 1.65; color: var(--ink-2); word-break: keep-all; }
 
-  .frame { display: grid; grid-template-columns: 1fr 1fr; aspect-ratio: 1 / 1; border-radius: 16px; overflow: hidden;
-           background: #fff; border: 2px solid #eee; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 20px 0 6px; padding: 0; list-style: none; }
+  .steps li { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 11px 10px; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+  .steps b { display: block; font-size: 11px; font-weight: 700; color: var(--brand); letter-spacing: .04em; margin-bottom: 2px; }
+
+  .team { display: none; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 10px 14px; border-radius: 14px; background: var(--brand-soft); font-size: 14px; color: var(--brand); }
+  .team.show { display: flex; }
+  .team b { font-weight: 700; }
+  .team button { background: none; border: 0; padding: 4px 0; font-size: 13px; font-weight: 600; color: var(--brand); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+  /* ---------- 미션 카드 ---------- */
+  main { max-width: 640px; margin: 0 auto; padding: 12px 20px 8px; display: grid; gap: 16px; }
+  .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; border: 1px solid rgba(231,226,216,.7); }
+  .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .card-head .l { display: flex; align-items: baseline; gap: 10px; }
+  .num { font-size: 12px; font-weight: 800; letter-spacing: .08em; color: var(--mc); }
+  .card-head h2 { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.02em; }
+  .state { font-size: 12.5px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #f1efe9; color: var(--ink-3); }
+  .card.saved .state { background: var(--brand-soft); color: var(--brand); }
+
+  .frame { display: grid; grid-template-columns: 1fr 1fr; aspect-ratio: 1 / 1; border-radius: 14px; overflow: hidden; background: #f3f1ec; }
   .frame img.half { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .shot { border: 0; padding: 0; margin: 0; background: #fff; cursor: pointer; display: grid; place-items: center;
-          border-left: 2px dashed #ddd; position: relative; font: inherit; color: #9a9a9a; }
-  .frame.rev .shot { border-left: 0; border-right: 2px dashed #ddd; }
-  .shot svg { width: 46%; max-width: 110px; }
-  .shot small { position: absolute; bottom: 14%; font-size: 15px; }
-  .shot:active { background: #f6f6f6; }
-  .shot img.done { width: 100%; height: 100%; object-fit: cover; }
+  .shot { border: 0; padding: 0; margin: 0; cursor: pointer; position: relative; display: grid; place-items: center;
+          background: repeating-linear-gradient(135deg, #f7f5f0 0 10px, #f2efe8 10px 20px); color: var(--ink-3); }
+  .shot::before { content: ""; position: absolute; inset: 10px; border: 1.5px dashed #cfc8ba; border-radius: 10px; pointer-events: none; }
+  .shot .cta { display: grid; justify-items: center; gap: 10px; font-size: 13.5px; font-weight: 600; }
+  .shot .ic { width: 56px; height: 56px; border-radius: 50%; background: var(--surface); box-shadow: var(--shadow); display: grid; place-items: center; color: var(--mc); }
+  .shot .ic svg { width: 26px; }
+  .shot:active .ic { transform: scale(.94); }
+  .shot img.done { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .shot .redo { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: rgba(20,24,22,.62); color: #fff; font-size: 12px; font-weight: 600; padding: 6px 11px; border-radius: 999px; backdrop-filter: blur(6px); }
+  .card.saved .shot::before { display: none; }
 
-  .check { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 14px; font-size: 21px; }
-  .box { width: 36px; height: 36px; border: 3px solid var(--ink); border-radius: 9px; display: grid; place-items: center; background: #fff; }
-  .box svg { width: 24px; visibility: hidden; color: var(--accent); }
-  .card.is-done .box svg { visibility: visible; }
+  footer { text-align: center; font-size: 12px; color: var(--ink-3); padding: 18px 20px 8px; line-height: 1.6; }
 
-  footer { text-align: center; font-size: 14px; color: #8a7a70; padding: 0 16px 30px; }
+  /* ---------- 하단 진행 바 ---------- */
+  .dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+          background: rgba(245,242,236,.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid var(--line); }
+  .dock-in { max-width: 608px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+  .progress { flex: 1; min-width: 0; }
+  .progress .t { font-size: 13px; color: var(--ink-2); margin-bottom: 7px; }
+  .progress .t b { color: var(--ink); font-weight: 700; }
+  .bars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .bars i { height: 6px; border-radius: 3px; background: #e2ddd2; transition: background .3s; }
+  .bars i.on { background: var(--brand); }
 
-  /* ---------- 카메라 화면 ---------- */
-  .layer { position: fixed; inset: 0; background: #111; color: #fff; display: none; flex-direction: column; z-index: 10; }
+  .btn { border: 0; border-radius: 14px; padding: 15px 18px; font-size: 16px; font-weight: 700; cursor: pointer; letter-spacing: -0.01em; transition: transform .1s, opacity .2s; }
+  .btn:active { transform: scale(.98); }
+  .btn:disabled { opacity: .4; cursor: default; transform: none; }
+  .btn.primary { background: var(--brand); color: #fff; }
+  .btn.light { background: #fff; color: var(--ink); }
+  .btn.ghost { background: rgba(255,255,255,.12); color: #fff; }
+  .btn.done { background: var(--brand-soft); color: var(--brand); }
+
+  /* ---------- 전체 화면 레이어 ---------- */
+  .layer { position: fixed; inset: 0; display: none; flex-direction: column; z-index: 10; }
   .layer.open { display: flex; }
-  .topbar { display: flex; align-items: center; justify-content: space-between; padding: max(12px, env(safe-area-inset-top)) 16px 10px; font-size: 19px; }
-  .iconbtn { background: rgba(255,255,255,.14); color: #fff; border: 0; border-radius: 999px; width: 44px; height: 44px;
-             font-size: 22px; cursor: pointer; display: grid; place-items: center; font-family: inherit; }
-  .stage-wrap { flex: 1; display: grid; place-items: center; padding: 8px 12px; min-height: 0; }
+  .dark { background: #0f1211; color: #fff; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: max(12px, env(safe-area-inset-top)) 14px 10px; font-size: 16px; font-weight: 700; }
+  .iconbtn { background: rgba(255,255,255,.12); color: #fff; border: 0; border-radius: 999px; width: 42px; height: 42px; cursor: pointer; display: grid; place-items: center; }
+  .iconbtn svg { width: 20px; }
+  .light-layer .iconbtn { background: #ece8df; color: var(--ink); }
+  .spacer { width: 42px; }
+
+  /* 카메라 */
+  .stage-wrap { flex: 1; display: grid; place-items: center; padding: 8px 14px; min-height: 0; }
   .stage { position: relative; display: grid; grid-template-columns: 1fr 1fr; aspect-ratio: 1 / 1;
-           width: min(100%, calc(100vh - 230px)); width: min(100%, calc(100dvh - 230px)); border-radius: 14px; overflow: hidden; background: #000; }
+           width: min(100%, calc(100vh - 240px)); width: min(100%, calc(100dvh - 240px)); border-radius: 16px; overflow: hidden; background: #000; }
   .stage img, .stage video { width: 100%; height: 100%; object-fit: cover; display: block; }
   .stage video.mirror { transform: scaleX(-1); }
-  .stage .seam { position: absolute; top: 0; bottom: 0; left: 50%; border-left: 2px dashed rgba(255,255,255,.85); pointer-events: none; }
-  .stage .msg { display: grid; place-items: center; text-align: center; padding: 12px; font-size: 16px; line-height: 1.5; color: #ddd; }
-  .hint { text-align: center; font-size: 15px; color: #cfcfcf; padding: 0 16px; }
-  .controls { display: flex; align-items: center; justify-content: space-around; padding: 14px 24px max(20px, env(safe-area-inset-bottom)); }
-  .shutter { width: 76px; height: 76px; border-radius: 50%; border: 5px solid #fff; background: #fff; box-shadow: inset 0 0 0 4px #111; cursor: pointer; }
-  .shutter:active { transform: scale(.94); }
+  .stage .seam { position: absolute; top: 0; bottom: 0; left: 50%; border-left: 2px dashed rgba(255,255,255,.9); pointer-events: none; }
+  .stage .msg { display: grid; place-items: center; text-align: center; padding: 14px; font-size: 14px; line-height: 1.6; color: #cfd3d1; word-break: keep-all; }
+  .hint { text-align: center; font-size: 14px; color: #b9bfbc; padding: 0 20px; margin: 6px 0 0; line-height: 1.5; word-break: keep-all; }
+  .controls { display: flex; align-items: center; justify-content: space-between; padding: 16px 36px max(22px, env(safe-area-inset-bottom)); }
+  .shutter { width: 74px; height: 74px; border-radius: 50%; border: 4px solid #fff; background: #fff; box-shadow: inset 0 0 0 4px #0f1211; cursor: pointer; }
+  .shutter:active { transform: scale(.93); }
   .shutter:disabled { opacity: .35; }
 
-  .result img { width: min(100%, 520px); border-radius: 12px; display: block; margin: 0 auto; }
-  .result .hint { margin-top: 10px; }
-  .btnrow { display: flex; gap: 10px; padding: 16px 16px max(20px, env(safe-area-inset-bottom)); max-width: 560px; width: 100%; margin: 0 auto; }
-  .btn { flex: 1; border: 0; border-radius: 14px; padding: 15px 10px; font: inherit; font-size: 19px; cursor: pointer; }
-  .btn.primary { background: #ffd93b; color: var(--ink); }
-  .btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
+  /* 미리보기 */
   .scroll { flex: 1; overflow: auto; padding: 8px 16px; }
-  .upload { text-align: center; font-size: 16px; margin-top: 12px; color: #cfcfcf; }
-  .upload.ok { color: #8be08b; } .upload.fail { color: #ff9a9a; }
-  .upload button { margin-left: 6px; background: none; border: 1px solid currentColor; color: inherit; border-radius: 8px; padding: 2px 10px; font: inherit; cursor: pointer; }
+  .preview { width: min(100%, 520px); border-radius: 14px; display: block; margin: 0 auto; }
+  .btnrow { display: flex; gap: 10px; padding: 14px 16px max(18px, env(safe-area-inset-bottom)); max-width: 560px; width: 100%; margin: 0 auto; }
+  .btnrow .btn { flex: 1; }
 
-  .btn:disabled { opacity: .5; }
-  .sending { position: absolute; inset: 0; background: rgba(17,17,17,.82); display: grid; place-content: center; justify-items: center; gap: 18px; text-align: center; font-size: 20px; line-height: 1.5; }
+  /* 최종 확인 */
+  .light-layer { background: var(--bg); color: var(--ink); }
+  .review-head { max-width: 560px; width: 100%; margin: 0 auto; padding: 4px 20px 6px; }
+  .review-head h2 { margin: 0 0 6px; font-size: 24px; font-weight: 800; letter-spacing: -0.03em; }
+  .review-head p { margin: 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.6; word-break: keep-all; }
+  .review-list { max-width: 560px; margin: 0 auto; display: grid; gap: 10px; padding: 14px 0 6px; }
+  .rv { background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; display: grid; grid-template-columns: minmax(0, 46%) 1fr; align-items: center; }
+  .rv img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: top; cursor: zoom-in; }
+  .rv .bar { display: grid; gap: 6px; padding: 12px 16px; }
+  .rv .bar .n { font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+  .rv .bar .s { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .rv .bar button { justify-self: start; margin-top: 4px; background: #f1efe9; border: 0; border-radius: 999px; padding: 7px 12px; font-size: 13px; font-weight: 600; color: var(--ink-2); cursor: pointer; }
+  .zoom { position: fixed; inset: 0; z-index: 40; background: rgba(15,18,17,.92); display: none; place-items: center; padding: 16px; }
+  .zoom.open { display: grid; }
+  .zoom img { max-width: 100%; max-height: 100%; border-radius: 12px; }
+  .err { color: var(--accent); text-align: center; font-size: 14px; margin: 4px 16px 0; word-break: keep-all; }
+
+  .sending { position: absolute; inset: 0; background: rgba(245,242,236,.92); backdrop-filter: blur(4px); display: grid; place-content: center; justify-items: center; gap: 16px; text-align: center; z-index: 2; }
   .sending[hidden] { display: none; }
-  .sending small { font-size: 15px; color: #bbb; }
-  .spinner { width: 54px; height: 54px; border-radius: 50%; border: 5px solid rgba(255,255,255,.2); border-top-color: #ffd93b; animation: spin .8s linear infinite; }
+  .sending b { font-size: 19px; }
+  .sending small { display: block; margin-top: 4px; font-size: 14px; color: var(--ink-2); }
+  .spinner { width: 50px; height: 50px; border-radius: 50%; border: 4px solid #dcd6ca; border-top-color: var(--brand); animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .done-screen { background: linear-gradient(#cfeefc, #fffdf6); color: var(--ink); }
-  .done-body { flex: 1; display: grid; place-content: center; justify-items: center; text-align: center; padding: 24px 20px; }
-  .big-check { width: 110px; height: 110px; border-radius: 50%; background: var(--green); color: #fff; display: grid; place-items: center; animation: pop .45s cubic-bezier(.2,1.6,.4,1); }
-  .big-check svg { width: 62px; }
+  /* 완료 */
+  .done-body { flex: 1; display: grid; place-content: center; justify-items: center; text-align: center; padding: 24px; }
+  .big-check { width: 96px; height: 96px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; box-shadow: 0 0 0 10px var(--brand-soft); animation: pop .5s cubic-bezier(.2,1.6,.4,1); }
+  .big-check svg { width: 50px; }
   @keyframes pop { from { transform: scale(.3); opacity: 0; } }
-  .done-body h2 { font-weight: 400; font-size: 34px; margin: 22px 0 8px; color: var(--green); }
-  .done-body p { font-size: 19px; line-height: 1.55; margin: 0 0 22px; word-break: keep-all; }
-  .dots { display: flex; gap: 12px; }
-  .dots span { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-size: 17px; border: 3px solid #ddd; color: #aaa; background: #fff; }
-  .dots span.on { border-color: var(--green); background: var(--green); color: #fff; }
-  .done-screen .btn.primary { background: var(--green); color: #fff; }
+  .done-body h2 { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; margin: 28px 0 10px; }
+  .done-body p { font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 0 0 22px; word-break: keep-all; }
+  .done-body p b { color: var(--ink); }
+  .done-thumbs { display: flex; gap: 8px; }
+  .done-thumbs img { width: 76px; height: 76px; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow); }
+  .done-meta { margin-top: 18px; font-size: 13px; color: var(--ink-3); }
+
+  /* 토스트 */
+  .toast { position: fixed; left: 50%; bottom: calc(104px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px); opacity: 0; z-index: 30;
+           background: var(--ink); color: #fff; font-size: 14px; font-weight: 600; padding: 12px 18px; border-radius: 999px; transition: .25s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
   /* ---------- 참가 등록 ---------- */
-  .modal { position: fixed; inset: 0; background: rgba(40,25,15,.55); display: none; place-items: center; padding: 16px; z-index: 20; }
-  .modal.open { display: grid; }
-  .sheet { background: #fffdf6; border-radius: 22px; padding: 22px 20px 18px; width: min(100%, 420px); max-height: 100%; overflow: auto; }
-  .sheet h2 { margin: 0 0 6px; font-weight: 400; font-size: 25px; color: var(--green); }
-  .sheet p { margin: 0 0 14px; line-height: 1.5; }
-  .sheet label.field { display: block; font-size: 17px; margin-bottom: 6px; }
-  .sheet input[type=text] { width: 100%; font: inherit; font-size: 19px; padding: 12px 14px; border: 2px solid #e2d6c8; border-radius: 12px; background: #fff; color: var(--ink); }
-  .sheet input[type=text]:focus { outline: none; border-color: var(--green); }
-  .consent { background: #f3efe6; border-radius: 12px; padding: 12px 14px; margin: 14px 0; font-family: system-ui, sans-serif; font-size: 13.5px; line-height: 1.55; color: #5a4436; }
-  .consent ul { margin: 6px 0 0; padding-left: 18px; }
-  .agree { display: flex; gap: 10px; align-items: center; font-size: 17px; margin-bottom: 14px; cursor: pointer; }
-  .agree input { width: 24px; height: 24px; accent-color: var(--green); }
-  .sheet .btn.primary:disabled { opacity: .45; }
-  .linkbtn { display: block; margin: 12px auto 0; background: none; border: 0; font: inherit; font-size: 15px; color: #8a7a70; text-decoration: underline; cursor: pointer; }
-  .me { text-align: center; font-size: 15px; color: #8a7a70; margin-top: 10px; }
-  .me button { background: none; border: 0; font: inherit; color: inherit; text-decoration: underline; cursor: pointer; }
+  .modal { position: fixed; inset: 0; background: rgba(20,24,22,.45); display: none; align-items: flex-end; justify-content: center; z-index: 20; }
+  .modal.open { display: flex; }
+  .sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 26px 20px max(20px, env(safe-area-inset-bottom)); width: min(100%, 520px); max-height: 92vh; overflow: auto; animation: up .3s ease-out; }
+  @keyframes up { from { transform: translateY(40px); opacity: .5; } }
+  @media (min-width: 560px) { .modal { align-items: center; } .sheet { border-radius: 24px; } }
+  .sheet h2 { margin: 0 0 6px; font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+  .sheet > p { margin: 0 0 18px; color: var(--ink-2); font-size: 15px; }
+  .sheet label.field { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--ink-2); }
+  .sheet input[type=text] { width: 100%; font: inherit; font-size: 18px; font-weight: 600; padding: 14px 16px; border: 1.5px solid var(--line); border-radius: 14px; background: #faf9f6; color: var(--ink); }
+  .sheet input[type=text]:focus { outline: none; border-color: var(--brand); background: #fff; }
+  .consent { background: #f6f4ef; border-radius: 14px; padding: 14px 16px; margin: 16px 0 14px; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+  .consent b { color: var(--ink); font-size: 13.5px; }
+  .consent ul { margin: 6px 0 0; padding-left: 16px; }
+  .agree { display: flex; gap: 10px; align-items: center; font-size: 15px; font-weight: 600; margin-bottom: 16px; cursor: pointer; }
+  .agree input { width: 22px; height: 22px; accent-color: var(--brand); }
+  .linkbtn { display: block; margin: 14px auto 0; background: none; border: 0; font-size: 13.5px; color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-</style>
-<style>
+
+  /* ---------- 카카오톡 안내 ---------- */
   #kakaoGate { display: none; }
-  html.in-kakao #kakaoGate { display: grid; position: fixed; inset: 0; z-index: 100; place-content: center; justify-items: center; gap: 14px;
-    padding: 24px; text-align: center; background: linear-gradient(#cfeefc, #fffdf6); color: var(--ink); }
+  html.in-kakao #kakaoGate { display: grid; position: fixed; inset: 0; z-index: 100; place-content: center; justify-items: center; gap: 14px; padding: 24px; text-align: center; background: var(--bg); }
   html.in-kakao body { overflow: hidden; }
-  #kakaoGate h2 { margin: 0; font-weight: 400; font-size: 28px; color: var(--green); }
-  #kakaoGate p { margin: 0; font-size: 18px; line-height: 1.6; word-break: keep-all; }
-  #kakaoGate .tip { font-size: 15px; color: #7a6a60; background: #fff; border-radius: 14px; padding: 12px 16px; line-height: 1.6; }
+  #kakaoGate h2 { margin: 0; font-size: 24px; font-weight: 800; }
+  #kakaoGate p { margin: 0; font-size: 16px; line-height: 1.65; color: var(--ink-2); word-break: keep-all; }
+  #kakaoGate .tip { font-size: 14px; background: #fff; border-radius: 14px; padding: 12px 16px; }
   #kakaoGate .btn { width: min(100%, 320px); }
 </style>
 </head>
 <body>
 
-<!-- 카카오톡 안에서 열렸을 때 안내 -->
 <div id="kakaoGate" role="dialog" aria-label="브라우저로 열기 안내">
   <h2>브라우저로 이동해요</h2>
-  <p>카카오톡 안에서는 촬영 중에<br>화면이 꺼질 수 있어요.<br>사파리·인터넷 앱에서 열어 주세요!</p>
+  <p>카카오톡 안에서는 촬영 중에<br>화면이 꺼질 수 있어요.<br>사파리·인터넷 앱에서 열어 주세요.</p>
   <button class="btn primary" id="kakaoOpen">브라우저로 열기</button>
-  <p class="tip">자동으로 열리지 않으면<br>화면 오른쪽 아래(또는 위) <b>⋯</b> 버튼 →<br><b>“다른 브라우저로 열기”</b>를 눌러 주세요.</p>
+  <p class="tip">자동으로 열리지 않으면<br>화면의 <b>⋯</b> 버튼 → <b>“다른 브라우저로 열기”</b></p>
 </div>
 
 <header>
-  <h1><span class="a">잃어버린</span> <span class="b">반쪽</span><span class="c">을</span> <span class="d">찾아라!!</span></h1>
-  <p class="lead">사진 속 건물의 반쪽과 셀카를 찍어 완성해보세요.</p>
-  <span class="ribbon">덕수궁 곳곳에서 <em>같은 건물</em>을 찾아보세요!</span>
-  <p class="me" id="me" hidden></p>
+  <div class="event"><span class="org">KDB생명보험지부</span><span class="name">2026년 임시대의원대회</span></div>
+  <h1>잃어버린 <em>반쪽</em>을<br>찾아라</h1>
+  <p class="lead">덕수궁 곳곳에 숨은 같은 건물을 찾아, 사진 속 나머지 반쪽을 우리 조 셀카와 함께 완성해 보세요.</p>
+  <ol class="steps">
+    <li><b>STEP 1</b>건물 찾기</li>
+    <li><b>STEP 2</b>촬영 후 저장</li>
+    <li><b>STEP 3</b>3장 모아 전송</li>
+  </ol>
+  <div class="team" id="team"></div>
 </header>
 
 <main id="missions"></main>
 
-<footer>카메라 칸을 눌러 촬영하고, 제출하면 미션 완료!</footer>
+<footer>덕수궁 · 잃어버린 반쪽을 찾아라</footer>
 
-<!-- 촬영 화면 -->
-<section class="layer" id="cam" aria-label="촬영">
+<!-- 하단 진행 바 -->
+<div class="dock">
+  <div class="dock-in">
+    <div class="progress">
+      <div class="t" id="progText"><b>0</b> / 3 저장됨</div>
+      <div class="bars" id="bars"><i></i><i></i><i></i></div>
+    </div>
+    <button class="btn primary" id="openReview" disabled>최종 전송</button>
+  </div>
+</div>
+
+<!-- 촬영 -->
+<section class="layer dark" id="cam" aria-label="촬영">
   <div class="topbar">
-    <button class="iconbtn" id="camClose" aria-label="닫기">✕</button>
+    <button class="iconbtn" id="camClose" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <span id="camTitle">미션</span>
-    <button class="iconbtn" id="camFlip" aria-label="전면/후면 카메라 전환">⟲</button>
+    <button class="iconbtn" id="camFlip" aria-label="전면/후면 카메라 전환"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8h-3l-2-3H9L7 8H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z"/><path d="M9 14a3 3 0 0 1 5.2-2M15 13.5a3 3 0 0 1-5.2 2"/><path d="M14.5 10.5l-.3 1.5 1.5.2M9.5 17l.3-1.5-1.5-.2"/></svg></button>
   </div>
   <div class="stage-wrap"><div class="stage" id="camStage"></div></div>
-  <p class="hint">점선에 맞춰 건물의 나머지 반쪽이 이어지도록 찍어보세요!</p>
+  <p class="hint">점선을 기준으로 건물의 나머지 반쪽이 이어지도록 맞춰 보세요</p>
   <div class="controls">
-    <button class="iconbtn" id="camAlbum" aria-label="앨범에서 고르기">🖼</button>
+    <button class="iconbtn" id="camAlbum" aria-label="앨범에서 고르기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg></button>
     <button class="shutter" id="camShutter" aria-label="촬영"></button>
-    <span style="width:44px"></span>
+    <span class="spacer"></span>
   </div>
   <input type="file" accept="image/*" capture="environment" id="fileInput" class="sr">
 </section>
 
-<!-- 결과 화면 -->
-<section class="layer result" id="res" aria-label="사진 확인">
+<!-- 사진 확인 -->
+<section class="layer dark" id="res" aria-label="사진 확인">
   <div class="topbar">
-    <button class="iconbtn" id="resClose" aria-label="취소">✕</button>
+    <button class="iconbtn" id="resClose" aria-label="취소"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <span id="resTitle">미션</span>
-    <span style="width:44px"></span>
+    <span class="spacer"></span>
   </div>
   <div class="scroll">
-    <img id="resImg" alt="완성된 사진">
-    <p class="hint" id="resHint">건물이 잘 이어졌나요? 마음에 들면 제출해 주세요!</p>
-    <p class="upload fail" id="upStatus" hidden></p>
+    <img class="preview" id="resImg" alt="완성된 사진">
+    <p class="hint">건물이 잘 이어졌나요? 마음에 들면 저장해 주세요</p>
   </div>
   <div class="btnrow">
     <button class="btn ghost" id="retake">다시 찍기</button>
-    <button class="btn primary" id="submit">제출하기</button>
-  </div>
-  <div class="sending" id="sending" hidden>
-    <div class="spinner" aria-hidden="true"></div>
-    <p>사진을 보내는 중이에요…<br><small>잠시만 기다려 주세요</small></p>
+    <button class="btn light" id="saveShot">저장하기</button>
   </div>
 </section>
 
-<!-- 완료 화면 -->
-<section class="layer done-screen" id="doneLayer" aria-label="미션 완료">
+<!-- 최종 확인 -->
+<section class="layer light-layer" id="review" aria-label="최종 확인">
+  <div class="topbar">
+    <button class="iconbtn" id="reviewClose" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <span>최종 확인</span>
+    <span class="spacer"></span>
+  </div>
+  <div class="scroll">
+    <div class="review-head">
+      <h2 id="reviewTitle">세 장 모두 모였어요!</h2>
+      <p id="reviewSub"></p>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+  </div>
+  <p class="err" id="sendErr" hidden></p>
+  <div class="btnrow">
+    <button class="btn primary" id="sendAll">3장 전송하기</button>
+  </div>
+  <div class="sending" id="sending" hidden>
+    <div class="spinner" aria-hidden="true"></div>
+    <div><b id="sendingText">사진을 보내는 중이에요</b><small>화면을 닫지 말고 잠시만 기다려 주세요</small></div>
+  </div>
+</section>
+
+<!-- 완료 -->
+<section class="layer light-layer" id="doneLayer" aria-label="전송 완료">
   <div class="done-body">
-    <div class="big-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
-    <h2 id="doneTitle">미션 완료!</h2>
+    <div class="big-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5L19.5 7"/></svg></div>
+    <h2>미션 완료!</h2>
     <p id="doneMsg"></p>
-    <div class="dots" id="doneDots"></div>
+    <div class="done-thumbs" id="doneThumbs"></div>
+    <div class="done-meta" id="doneMeta"></div>
   </div>
   <div class="btnrow">
     <button class="btn primary" id="doneOk">확인</button>
   </div>
 </section>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="zoom" id="zoom" role="dialog" aria-label="사진 크게 보기"><img id="zoomImg" alt=""></div>
+
 <!-- 참가 등록 -->
 <div class="modal" id="join" role="dialog" aria-modal="true" aria-labelledby="joinTitle">
   <form class="sheet" id="joinForm">
     <h2 id="joinTitle">참가 등록</h2>
-    <p>미션을 시작하기 전에 닉네임을 알려주세요!</p>
-    <label class="field" for="nick">닉네임</label>
-    <input type="text" id="nick" maxlength="20" placeholder="예: 덕수궁탐험대" autocomplete="nickname" required>
+    <p>참여하는 조 이름을 입력해 주세요.</p>
+    <label class="field" for="nick">조 이름</label>
+    <input type="text" id="nick" maxlength="20" placeholder="예: 3조" autocomplete="off" required>
     <div class="consent">
-      <b>사진 수집·이용 동의 (참여 기록 저장 시 필요)</b>
+      <b>사진 수집·이용 동의</b>
       <ul>
-        <li>수집 항목: 닉네임, 촬영한 미션 사진(얼굴이 포함될 수 있음)</li>
-        <li>이용 목적: 이벤트 참여 확인 및 경품 지급</li>
-        <li>보관 기간: 이벤트 종료 후 30일 이내 파기</li>
-        <li>동의하지 않아도 참여할 수 있으며, 이 경우 사진은 내 휴대폰에만 저장되고 참여 기록은 남지 않아요.</li>
+        <li>수집 항목: 조 이름, 촬영한 미션 사진(얼굴 포함 가능)</li>
+        <li>이용 목적: 미션 참여 확인 및 시상</li>
+        <li>보관 기간: 행사 종료 후 30일 이내 파기</li>
+        <li>동의하지 않으면 사진이 전송되지 않고 내 휴대폰에만 저장돼요.</li>
       </ul>
     </div>
     <label class="agree"><input type="checkbox" id="agree"> 위 내용에 동의합니다</label>
@@ -253,61 +348,120 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   </form>
 </div>
 
-<script src="config.js?v=3"></script>
+<script src="config.js?v=4"></script>
 <script>
 // side: 미리 준비된 반쪽 사진이 놓이는 위치 ('left' | 'right')
 const MISSIONS = [
-  { id: 1, color: 'pink',  img: 'img/mission1.jpg', side: 'left'  },
-  { id: 2, color: 'blue',  img: 'img/mission2.jpg', side: 'right' },
-  { id: 3, color: 'green', img: 'img/mission3.jpg', side: 'left'  },
+  { id: 1, color: '#d8485f', img: 'img/mission1.jpg', side: 'left'  },
+  { id: 2, color: '#2f6bc9', img: 'img/mission2.jpg', side: 'right' },
+  { id: 3, color: '#2d8a5a', img: 'img/mission3.jpg', side: 'left'  },
 ];
 const OUT = 1600;            // 완성 이미지 한 변(px)
-const BAND = 120;            // 하단 문구 띠 높이(px)
+const BAND = 132;            // 하단 문구 띠 높이(px)
 
-const CAMERA_SVG = `<svg viewBox="0 0 120 100" aria-hidden="true"><g fill="#bdbdbd">
-  <rect x="10" y="30" width="100" height="64" rx="14"/><rect x="40" y="18" width="40" height="20" rx="6"/></g>
-  <circle cx="60" cy="62" r="20" fill="#fff"/><circle cx="60" cy="62" r="12" fill="#bdbdbd"/>
-  <g stroke="#bdbdbd" stroke-width="5" stroke-linecap="round"><path d="M14 8l8 10M106 8l-8 10M2 26l12 4M118 26l-12 4"/></g></svg>`;
-const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>`;
+const ICON_CAMERA = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8h-3l-2-3H9L7 8H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>`;
 
 const store = {
   get(k) { try { return localStorage.getItem(k); } catch { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} },
 };
 
+// 저장한 사진(blob)은 IndexedDB에 보관 — 새로고침해도 유지. 실패하면 메모리만 사용
+const shots = {};
+const idb = (() => {
+  let dbp;
+  const open = () => dbp ??= new Promise((ok, no) => {
+    const r = indexedDB.open('half-shots', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('shots');
+    r.onsuccess = () => ok(r.result);
+    r.onerror = () => no(r.error);
+  });
+  const run = async (mode, fn) => {
+    const db = await open();
+    return new Promise((ok, no) => {
+      const t = db.transaction('shots', mode);
+      const req = fn(t.objectStore('shots'));
+      t.oncomplete = () => ok(req.result);
+      t.onerror = () => no(t.error);
+    });
+  };
+  return {
+    get: (k) => run('readonly', (s) => s.get(k)).catch(() => null),
+    set: (k, v) => run('readwrite', (s) => s.put(v, k)).catch(() => {}),
+    del: (k) => run('readwrite', (s) => s.delete(k)).catch(() => {}),
+  };
+})();
+
 const $ = (s) => document.querySelector(s);
-const refImgs = {};          // 미션별로 로드된 Image 객체
-let current = null;          // 진행 중인 미션
+const refImgs = {};
+let current = null;
 let stream = null;
 let facing = 'environment';
-let resultBlob = null;
+let pendingShot = null;      // 촬영했지만 아직 저장하지 않은 사진
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2200);
+}
+const savedCount = () => MISSIONS.filter((m) => shots[m.id]).length;
+const submitted = () => store.get('submitted') === '1';
 
 /* ---------- 미션 카드 ---------- */
 function renderCards() {
   $('#missions').innerHTML = MISSIONS.map((m) => {
     const half = `<img class="half" src="${m.img}" alt="미션 ${m.id} 건물의 반쪽">`;
-    const shot = `<button class="shot" data-id="${m.id}" aria-label="미션 ${m.id} 사진 찍기">${CAMERA_SVG}<small>눌러서 촬영</small></button>`;
-    const done = store.get('done' + m.id) === '1';
-    return `<article class="card ${done ? 'is-done' : ''}" data-c="${m.color}" id="card${m.id}">
-      <div class="card-head"><span class="badge">미션 ${m.id}</span><span>어느 건물일까요?</span></div>
-      <div class="frame ${m.side === 'right' ? 'rev' : ''}">${m.side === 'left' ? half + shot : shot + half}</div>
-      <div class="check"><span class="box">${CHECK_SVG}</span><span>사진을 찍었어요!</span></div>
+    const shot = `<button class="shot" data-id="${m.id}" aria-label="미션 ${m.id} 촬영"></button>`;
+    return `<article class="card" id="card${m.id}" style="--mc:${m.color}">
+      <div class="card-head">
+        <div class="l"><span class="num">MISSION 0${m.id}</span><h2>어느 건물일까요?</h2></div>
+        <span class="state">촬영 전</span>
+      </div>
+      <div class="frame">${m.side === 'left' ? half + shot : shot + half}</div>
     </article>`;
   }).join('');
-  document.querySelectorAll('.shot').forEach((b) => b.addEventListener('click', () => openCamera(+b.dataset.id)));
+  document.querySelectorAll('.shot').forEach((b) => b.addEventListener('click', () => onShotTap(+b.dataset.id)));
+  MISSIONS.forEach((m) => paintCard(m.id));
+}
+
+function paintCard(id) {
+  const card = $('#card' + id);
+  const s = shots[id];
+  card.classList.toggle('saved', !!s);
+  card.querySelector('.state').textContent = s ? (submitted() ? '전송 완료' : '저장됨') : '촬영 전';
+  card.querySelector('.shot').innerHTML = s
+    ? `<img class="done" src="${s.thumb}" alt="내가 찍은 반쪽"><span class="redo">다시 찍기</span>`
+    : `<span class="cta"><span class="ic">${ICON_CAMERA}</span>탭해서 촬영</span>`;
+}
+
+function paintDock() {
+  const n = savedCount();
+  const sent = submitted();
+  $('#progText').innerHTML = sent ? '<b>전송 완료</b> · 진행요원에게 보여주세요' : `<b>${n}</b> / 3 저장됨`;
+  document.querySelectorAll('#bars i').forEach((el, i) => el.classList.toggle('on', i < n));
+  const btn = $('#openReview');
+  btn.disabled = !sent && n < 3;
+  btn.textContent = sent ? '완료 화면' : '최종 전송';
+  btn.className = sent ? 'btn done' : 'btn primary';
+}
+
+function onShotTap(id) {
+  if (submitted() && !confirm('이미 전송을 마쳤어요.\n이 미션을 다시 찍어서 새로 전송할까요?')) return;
+  openCamera(id);
 }
 
 function loadRef(m) {
-  if (!refImgs[m.id]) {
-    refImgs[m.id] = new Promise((ok, fail) => {
-      const im = new Image();
-      im.onload = () => ok(im); im.onerror = fail; im.src = m.img;
-    });
-  }
-  return refImgs[m.id];
+  return refImgs[m.id] ??= new Promise((ok, fail) => {
+    const im = new Image();
+    im.onload = () => ok(im); im.onerror = fail; im.src = m.img;
+  });
 }
 
-/* ---------- 참가 등록 · 업로드 ---------- */
+/* ---------- 참가 등록 · 전송 ---------- */
 const CFG = window.APP_CONFIG || {};
 const ONLINE = !!(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
 let sbPromise = null;
@@ -324,7 +478,7 @@ function uuid() {
     (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16));
 }
 
-// mode: 'share'(동의·업로드) | 'local'(폰에만 저장)
+// mode: 'share'(동의·전송) | 'local'(폰에만 저장)
 function profile() {
   const mode = store.get('mode');
   if (!mode) return null;
@@ -332,20 +486,17 @@ function profile() {
   if (!pid) { pid = uuid(); store.set('pid', pid); }
   return { mode, pid, nickname: store.get('nickname') || '' };
 }
+const sharing = () => ONLINE && profile()?.mode === 'share';
 
-function renderMe() {
+function renderTeam() {
   const p = profile();
-  const me = $('#me');
-  if (!ONLINE || !p) { me.hidden = true; return; }
-  me.hidden = false;
-  me.innerHTML = p.mode === 'share'
-    ? `참가자: <b>${escapeHtml(p.nickname)}</b> · <button id="meEdit">변경</button>`
-    : `내 폰에만 저장하는 중 · <button id="meEdit">참가 등록하기</button>`;
-  $('#meEdit').onclick = () => askJoin();
-}
-
-function escapeHtml(s) {
-  return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const el = $('#team');
+  el.classList.toggle('show', !!(ONLINE && p));
+  if (!ONLINE || !p) return;
+  el.innerHTML = p.mode === 'share'
+    ? `<span>참가 조 <b>${escapeHtml(p.nickname)}</b></span><button id="teamEdit">변경</button>`
+    : `<span>내 폰에만 저장하는 중</span><button id="teamEdit">참가 등록하기</button>`;
+  $('#teamEdit').onclick = () => askJoin();
 }
 
 let joinResolve = null;
@@ -360,7 +511,7 @@ function finishJoin(mode) {
   store.set('mode', mode);
   if (mode === 'share') store.set('nickname', $('#nick').value.trim());
   $('#join').classList.remove('open');
-  renderMe();
+  renderTeam();
   joinResolve?.(); joinResolve = null;
 }
 const validJoin = () => { $('#joinOk').disabled = !($('#agree').checked && $('#nick').value.trim()); };
@@ -369,11 +520,11 @@ $('#agree').onchange = validJoin;
 $('#joinForm').onsubmit = (e) => { e.preventDefault(); if (!$('#joinOk').disabled) finishJoin('share'); };
 $('#joinLocal').onclick = () => finishJoin('local');
 
-// 서버로 사진과 참여 기록 전송 (실패 시 예외)
-async function upload({ blob, small }, mission) {
+async function uploadOne(id) {
   const p = profile();
+  const { blob, small } = shots[id];
   const sb = await supabase();
-  const base = `${p.pid}/m${mission}-${Date.now()}`;
+  const base = `${p.pid}/m${id}-${Date.now()}`;
   const opts = { contentType: 'image/jpeg', upsert: false };
   const [a, b] = await Promise.all([
     sb.storage.from('photos').upload(`${base}.jpg`, blob, opts),
@@ -381,13 +532,11 @@ async function upload({ blob, small }, mission) {
   ]);
   if (a.error || b.error) throw a.error || b.error;
   const { error } = await sb.from('submissions').insert({
-    participant_id: p.pid, nickname: p.nickname, mission,
+    participant_id: p.pid, nickname: p.nickname, mission: id,
     photo_path: `${base}.jpg`, thumb_path: `${base}_s.jpg`,
   });
   if (error) throw error;
 }
-
-const sharing = () => ONLINE && profile()?.mode === 'share';
 
 /* ---------- 카메라 ---------- */
 async function openCamera(id) {
@@ -429,7 +578,7 @@ function cameraUnavailable() {
   const slot = $('#liveSlot');
   const msg = document.createElement('div');
   msg.id = 'liveSlot'; msg.className = 'msg';
-  msg.innerHTML = '이 브라우저에서는 실시간 카메라를 쓸 수 없어요.<br><br>아래 🖼 버튼이나 촬영 버튼을 누르면 휴대폰 카메라가 열려요.';
+  msg.innerHTML = '이 브라우저에서는 실시간 카메라를 쓸 수 없어요.<br><br>가운데 촬영 버튼을 누르면 휴대폰 카메라가 열려요.';
   slot.replaceWith(msg);
   $('#camShutter').disabled = false;
 }
@@ -439,10 +588,13 @@ function stopStream() {
   stream = null;
 }
 
-function closeCamera() {
-  stopStream();
-  $('#cam').classList.remove('open');
-  document.body.style.overflow = '';
+function closeLayer(id) {
+  $(id).classList.remove('open');
+  if (!document.querySelector('.layer.open')) document.body.style.overflow = '';
+}
+function openLayer(id) {
+  $(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 /* ---------- 합성 ---------- */
@@ -454,6 +606,7 @@ function coverRect(sw, sh, aspect) {
 
 async function compose(source, sw, sh, mirror) {
   const ref = await loadRef(current);
+  await document.fonts?.load('700 44px "Pretendard Variable"').catch(() => {});
   const half = OUT / 2;
   const c = document.createElement('canvas');
   c.width = OUT; c.height = OUT + BAND;
@@ -471,15 +624,21 @@ async function compose(source, sw, sh, mirror) {
   else g.drawImage(source, ...coverRect(sw, sh, 0.5), camX, 0, half, OUT);
   g.restore();
 
-  // 하단 문구
-  const colors = { pink: '#ec3f73', blue: '#1f86d0', green: '#2c7a3a' };
-  g.fillStyle = colors[current.color];
+  // 하단 문구 띠
+  const team = sharing() ? profile().nickname : '';
+  g.fillStyle = '#1d2622';
   g.fillRect(0, OUT, OUT, BAND);
-  g.fillStyle = '#fff';
-  g.font = `56px "Jua", sans-serif`;
+  g.fillStyle = current.color;
+  g.fillRect(0, OUT, 14, BAND);
   g.textBaseline = 'middle';
-  g.textAlign = 'center';
-  g.fillText(`덕수궁 · 잃어버린 반쪽을 찾아라!! · 미션 ${current.id}`, OUT / 2, OUT + BAND / 2 + 2);
+  g.fillStyle = '#fff';
+  g.font = '700 44px "Pretendard Variable", Pretendard, sans-serif';
+  g.textAlign = 'left';
+  g.fillText(`MISSION 0${current.id}${team ? '  ·  ' + team : ''}`, 60, OUT + BAND / 2);
+  g.fillStyle = 'rgba(255,255,255,.62)';
+  g.font = '500 34px "Pretendard Variable", Pretendard, sans-serif';
+  g.textAlign = 'right';
+  g.fillText('KDB생명보험지부 2026 임시대의원대회 · 덕수궁', OUT - 56, OUT + BAND / 2);
 
   // 카드에 보여줄 촬영 반쪽 썸네일
   const t = document.createElement('canvas');
@@ -502,7 +661,7 @@ async function compose(source, sw, sh, mirror) {
 async function captureLive() {
   const v = $('#liveSlot');
   if (!(v instanceof HTMLVideoElement)) return $('#fileInput').click();
-  showResult(await compose(v, v.videoWidth, v.videoHeight, facing === 'user'));
+  showPreview(await compose(v, v.videoWidth, v.videoHeight, facing === 'user'));
 }
 
 async function captureFile(file) {
@@ -514,118 +673,166 @@ async function captureFile(file) {
     src = await new Promise((ok) => { const im = new Image(); im.onload = () => ok(im); im.src = URL.createObjectURL(file); });
     w = src.naturalWidth; h = src.naturalHeight;
   }
-  showResult(await compose(src, w, h, false));
+  showPreview(await compose(src, w, h, false));
 }
 
-/* ---------- 결과 ---------- */
-let pendingShot = null;     // 촬영했지만 아직 제출하지 않은 사진
-
-function showResult(shot) {
+/* ---------- 사진 확인 → 저장 ---------- */
+function showPreview(shot) {
   pendingShot = shot;
-  resultBlob = shot.blob;
   stopStream();
-  $('#cam').classList.remove('open');
+  closeLayer('#cam');
   const img = $('#resImg');
   if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
   img.src = URL.createObjectURL(shot.blob);
   $('#resTitle').textContent = `미션 ${current.id} 확인`;
-  $('#upStatus').hidden = true;
-  $('#sending').hidden = true;
-  // 동의한 참가자는 서버로 제출, 아니면 내 폰에 저장
-  $('#submit').textContent = sharing() ? '제출하기' : '완료 (내 폰에 저장)';
-  $('#res').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  openLayer('#res');
 }
 
-async function submitResult() {
+async function saveShot() {
   if (!pendingShot) return;
-  const btns = [$('#submit'), $('#retake'), $('#resClose')];
-  if (sharing()) {
-    $('#upStatus').hidden = true;
-    $('#sending').hidden = false;
-    btns.forEach((b) => { b.disabled = true; });
-    try {
-      await upload(pendingShot, current.id);
-    } catch (e) {
-      console.error(e);
-      $('#sending').hidden = true;
-      btns.forEach((b) => { b.disabled = false; });
-      $('#upStatus').hidden = false;
-      $('#upStatus').textContent = '전송에 실패했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.';
-      $('#submit').textContent = '다시 보내기';
-      return;
-    }
-    $('#sending').hidden = true;
-    btns.forEach((b) => { b.disabled = false; });
-  } else {
-    await saveToPhone();
-  }
-  markDone(current.id, pendingShot.thumb);
+  const id = current.id;
+  shots[id] = pendingShot;
   pendingShot = null;
-  $('#res').classList.remove('open');
+  await idb.set('m' + id, shots[id]);
+  if (submitted()) { store.del('submitted'); store.del('submittedAt'); }   // 전송 후 다시 찍으면 새로 전송해야 함
+  store.del('up' + id);
+  closeLayer('#res');
+  paintCard(id);
+  paintDock();
+  const left = 3 - savedCount();
+  if (left === 0) openReview();
+  else {
+    toast(`미션 ${id} 저장 완료 · 남은 미션 ${left}개`);
+    const next = MISSIONS.find((m) => !shots[m.id]);
+    $('#card' + next.id).scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+/* ---------- 최종 확인 → 전송 ---------- */
+function openReview() {
+  if (submitted()) return showDone();
+  const local = !sharing();
+  $('#reviewTitle').textContent = '세 장 모두 모였어요!';
+  $('#reviewSub').textContent = local
+    ? '사진을 확인하고 내 휴대폰에 저장해 주세요.'
+    : '사진을 확인하고 전송해 주세요. 전송 후 완료 화면을 진행요원에게 보여주세요.';
+  $('#sendAll').textContent = local ? '3장 내 폰에 저장하기' : '3장 전송하기';
+  $('#sendErr').hidden = true;
+  $('#reviewList').innerHTML = MISSIONS.map((m) => {
+    const url = URL.createObjectURL(shots[m.id].blob);
+    return `<div class="rv"><img src="${url}" alt="미션 ${m.id} 사진" data-zoom>
+      <div class="bar"><span class="n" style="color:${m.color}">MISSION 0${m.id}</span><span class="s">저장 완료</span>
+      <button data-redo="${m.id}">다시 찍기</button></div></div>`;
+  }).join('');
+  $('#reviewList').querySelectorAll('[data-zoom]').forEach((im) => {
+    im.onclick = () => { $('#zoomImg').src = im.src; $('#zoom').classList.add('open'); };
+  });
+  $('#reviewList').querySelectorAll('[data-redo]').forEach((b) => {
+    b.onclick = () => { closeLayer('#review'); openCamera(+b.dataset.redo); };
+  });
+  openLayer('#review');
+}
+
+async function sendAll() {
+  if (!sharing()) {
+    await saveAllToPhone();
+    store.set('submitted', '1');
+    finishSubmit();
+    return;
+  }
+  const btn = $('#sendAll');
+  btn.disabled = true;
+  $('#sendErr').hidden = true;
+  $('#sending').hidden = false;
+  try {
+    let n = 0;
+    for (const m of MISSIONS) {
+      n++;
+      $('#sendingText').textContent = `사진을 보내는 중이에요 (${n}/3)`;
+      if (store.get('up' + m.id) === '1') continue;   // 재시도 시 이미 보낸 사진은 건너뜀
+      await uploadOne(m.id);
+      store.set('up' + m.id, '1');
+    }
+  } catch (e) {
+    console.error(e);
+    $('#sending').hidden = true;
+    btn.disabled = false;
+    btn.textContent = '다시 전송하기';
+    $('#sendErr').textContent = '전송에 실패했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.';
+    $('#sendErr').hidden = false;
+    return;
+  }
+  $('#sending').hidden = true;
+  btn.disabled = false;
+  store.set('submitted', '1');
+  finishSubmit();
+}
+
+function finishSubmit() {
+  closeLayer('#review');
+  MISSIONS.forEach((m) => paintCard(m.id));
+  paintDock();
   showDone();
 }
 
-async function saveToPhone() {
-  const name = `덕수궁_반쪽찾기_미션${current.id}.jpg`;
-  const file = new File([resultBlob], name, { type: 'image/jpeg' });
-  if (navigator.canShare?.({ files: [file] })) {
-    try { await navigator.share({ files: [file], title: '잃어버린 반쪽을 찾아라!!' }); return; }
+async function saveAllToPhone() {
+  const files = MISSIONS.map((m) => new File([shots[m.id].blob], `덕수궁_반쪽찾기_미션${m.id}.jpg`, { type: 'image/jpeg' }));
+  if (navigator.canShare?.({ files })) {
+    try { await navigator.share({ files, title: '잃어버린 반쪽을 찾아라' }); return; }
     catch (e) { if (e.name === 'AbortError') return; }
   }
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(resultBlob); a.download = name;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-}
-
-function markDone(id, thumb) {
-  store.set('done' + id, '1');
-  store.set('thumb' + id, thumb);
-  paintDone(id, thumb);
-}
-
-function paintDone(id, thumb) {
-  const card = $('#card' + id);
-  card.classList.add('is-done');
-  if (thumb) card.querySelector('.shot').innerHTML = `<img class="done" src="${thumb}" alt="내가 찍은 반쪽">`;
+  for (const f of files) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(f); a.download = f.name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
 }
 
 function showDone() {
-  const done = MISSIONS.filter((m) => store.get('done' + m.id) === '1');
-  const all = done.length === MISSIONS.length;
   const p = profile();
-  $('#doneTitle').textContent = all ? '모든 미션 완료! 🎉' : `미션 ${current.id} 완료!`;
-  $('#doneMsg').innerHTML = all
-    ? `${p?.nickname ? `<b>${escapeHtml(p.nickname)}</b>님, ` : ''}잃어버린 반쪽을 모두 찾았어요!<br>이 화면을 진행요원에게 보여주세요.`
-    : `${sharing() ? '사진이 잘 제출됐어요.' : '사진이 저장됐어요.'}<br>남은 미션 ${MISSIONS.length - done.length}개도 찾아보세요!`;
-  $('#doneDots').innerHTML = MISSIONS.map((m) =>
-    `<span class="${store.get('done' + m.id) === '1' ? 'on' : ''}">${m.id}</span>`).join('');
-  $('#doneLayer').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeResult() {
-  pendingShot = null;
-  $('#res').classList.remove('open');
-  document.body.style.overflow = '';
+  const team = sharing() && p?.nickname ? `<b>${escapeHtml(p.nickname)}</b>, ` : '';
+  $('#doneMsg').innerHTML = sharing()
+    ? `${team}잃어버린 반쪽을 모두 찾았어요!<br>이 화면을 진행요원에게 보여주세요.`
+    : '잃어버린 반쪽을 모두 찾았어요!<br>이 화면을 진행요원에게 보여주세요.';
+  $('#doneThumbs').innerHTML = MISSIONS.map((m) =>
+    shots[m.id] ? `<img src="${URL.createObjectURL(shots[m.id].small)}" alt="미션 ${m.id}" style="object-position:top">` : '').join('');
+  const at = store.get('submittedAt');
+  $('#doneMeta').textContent = at ? `전송 시각 ${at}` : '';
+  openLayer('#doneLayer');
 }
 
 /* ---------- 이벤트 ---------- */
-$('#camClose').onclick = closeCamera;
+$('#camClose').onclick = () => { stopStream(); closeLayer('#cam'); };
 $('#camFlip').onclick = () => { facing = facing === 'user' ? 'environment' : 'user'; startStream(); };
 $('#camShutter').onclick = captureLive;
 $('#camAlbum').onclick = () => $('#fileInput').click();
 $('#fileInput').onchange = (e) => { captureFile(e.target.files[0]); e.target.value = ''; };
-$('#resClose').onclick = closeResult;
-$('#retake').onclick = () => { closeResult(); openCamera(current.id); };
-$('#submit').onclick = submitResult;
+$('#resClose').onclick = () => { pendingShot = null; closeLayer('#res'); };
+$('#retake').onclick = () => { pendingShot = null; closeLayer('#res'); openCamera(current.id); };
+$('#saveShot').onclick = saveShot;
+$('#openReview').onclick = openReview;
+$('#reviewClose').onclick = () => closeLayer('#review');
+$('#sendAll').onclick = async () => {
+  await sendAll();
+  if (submitted() && !store.get('submittedAt')) {
+    store.set('submittedAt', new Date().toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }));
+    $('#doneMeta').textContent = `전송 시각 ${store.get('submittedAt')}`;
+  }
+};
+$('#doneOk').onclick = () => closeLayer('#doneLayer');
+$('#zoom').onclick = () => $('#zoom').classList.remove('open');
 $('#kakaoOpen').onclick = () => { location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href); };
-$('#doneOk').onclick = () => { $('#doneLayer').classList.remove('open'); document.body.style.overflow = ''; };
 
-renderCards();
-MISSIONS.forEach((m) => { if (store.get('done' + m.id) === '1') paintDone(m.id, store.get('thumb' + m.id)); });
-renderMe();
+(async () => {
+  for (const m of MISSIONS) {
+    const s = await idb.get('m' + m.id);
+    if (s) shots[m.id] = s;
+  }
+  renderCards();
+  paintDock();
+  renderTeam();
+})();
 </script>
 </body>
 </html>

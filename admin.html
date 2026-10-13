@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>반쪽찾기 관리자</title>
+<title>반쪽찾기 관리자 · KDB생명보험지부</title>
 <style>
   :root { --ink: #3b2a20; --line: #e8e1d6; --bg: #faf8f4; --green: #2c7a3a; --muted: #8a7a70; }
   * { box-sizing: border-box; }
@@ -65,19 +65,19 @@
 
   <section id="board" hidden>
     <div class="stats">
-      <div class="stat"><b id="sPeople">0</b><span>참가자</span></div>
-      <div class="stat"><b id="sDone">0</b><span>3개 미션 완료</span></div>
+      <div class="stat"><b id="sPeople">0</b><span>참가 조(기기)</span></div>
+      <div class="stat"><b id="sDone">0</b><span>3장 모두 전송</span></div>
       <div class="stat"><b id="sM1">0</b><span>미션 1 완료</span></div>
       <div class="stat"><b id="sM2">0</b><span>미션 2 완료</span></div>
       <div class="stat"><b id="sM3">0</b><span>미션 3 완료</span></div>
     </div>
     <div class="tools">
-      <input type="search" id="q" placeholder="닉네임 검색">
+      <input type="search" id="q" placeholder="조 이름 검색">
       <button class="btn" id="reload">새로고침</button>
       <span class="sub" id="updated"></span>
     </div>
     <div class="wrap"><table>
-      <thead><tr><th>닉네임</th><th>미션 1</th><th>미션 2</th><th>미션 3</th><th>상태</th><th>마지막 참여</th></tr></thead>
+      <thead><tr><th>조</th><th>미션 1</th><th>미션 2</th><th>미션 3</th><th>상태</th><th>마지막 참여</th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </section>
@@ -90,7 +90,7 @@
   <div class="bar"><a class="btn" id="viewDl" download>원본 다운로드</a><button class="btn" id="viewClose">닫기</button></div>
 </dialog>
 
-<script src="config.js?v=3"></script>
+<script src="config.js?v=4"></script>
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
 
