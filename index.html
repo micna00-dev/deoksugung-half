@@ -8,6 +8,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<script>
+// 카카오톡 인앱 브라우저에서 열리면 기본 브라우저(아이폰 사파리 / 갤럭시 기본 브라우저)로 넘김
+(function () {
+  if (!/KAKAOTALK/i.test(navigator.userAgent)) return;
+  document.documentElement.classList.add('in-kakao');
+  location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href);
+})();
+</script>
 <style>
   :root {
     --ink: #4a2c1d;
@@ -129,8 +137,26 @@
   .me button { background: none; border: 0; font: inherit; color: inherit; text-decoration: underline; cursor: pointer; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 </style>
+<style>
+  #kakaoGate { display: none; }
+  html.in-kakao #kakaoGate { display: grid; position: fixed; inset: 0; z-index: 100; place-content: center; justify-items: center; gap: 14px;
+    padding: 24px; text-align: center; background: linear-gradient(#cfeefc, #fffdf6); color: var(--ink); }
+  html.in-kakao body { overflow: hidden; }
+  #kakaoGate h2 { margin: 0; font-weight: 400; font-size: 28px; color: var(--green); }
+  #kakaoGate p { margin: 0; font-size: 18px; line-height: 1.6; word-break: keep-all; }
+  #kakaoGate .tip { font-size: 15px; color: #7a6a60; background: #fff; border-radius: 14px; padding: 12px 16px; line-height: 1.6; }
+  #kakaoGate .btn { width: min(100%, 320px); }
+</style>
 </head>
 <body>
+
+<!-- 카카오톡 안에서 열렸을 때 안내 -->
+<div id="kakaoGate" role="dialog" aria-label="브라우저로 열기 안내">
+  <h2>브라우저로 이동해요</h2>
+  <p>카카오톡 안에서는 촬영 중에<br>화면이 꺼질 수 있어요.<br>사파리·인터넷 앱에서 열어 주세요!</p>
+  <button class="btn primary" id="kakaoOpen">브라우저로 열기</button>
+  <p class="tip">자동으로 열리지 않으면<br>화면 오른쪽 아래(또는 위) <b>⋯</b> 버튼 →<br><b>“다른 브라우저로 열기”</b>를 눌러 주세요.</p>
+</div>
 
 <header>
   <h1><span class="a">잃어버린</span> <span class="b">반쪽</span><span class="c">을</span> <span class="d">찾아라!!</span></h1>
@@ -584,6 +610,7 @@ $('#fileInput').onchange = (e) => { captureFile(e.target.files[0]); e.target.val
 $('#resClose').onclick = closeResult;
 $('#retake').onclick = () => { closeResult(); openCamera(current.id); };
 $('#submit').onclick = submitResult;
+$('#kakaoOpen').onclick = () => { location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href); };
 $('#doneOk').onclick = () => { $('#doneLayer').classList.remove('open'); document.body.style.overflow = ''; };
 
 renderCards();
