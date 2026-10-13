@@ -6,4 +6,6 @@
 window.APP_CONFIG = {
   SUPABASE_URL: 'https://yvlfkitjdzihdunjajjt.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_D2791_sQyjrX5aTrnbCjLg_i5caMp-C',
+  // 사진 전송 직후 AI 채점 자동 요청 (false 면 관리자 페이지에서 직접 채점)
+  AUTO_SCORE: true,
 };

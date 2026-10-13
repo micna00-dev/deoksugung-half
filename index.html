@@ -17,7 +17,7 @@ if (new URLSearchParams(location.search).has('reset')) {
 }
 
 // 새 버전 자동 반영: 배포할 때 APP_VERSION 과 version.json 의 v 를 같이 올릴 것
-const APP_VERSION = '8';
+const APP_VERSION = '9';
 fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
   const u = new URL(location.href);
   if (v !== APP_VERSION && u.searchParams.get('v') !== v) {
@@ -356,7 +356,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   </form>
 </div>
 
-<script src="config.js?v=8"></script>
+<script src="config.js?v=9"></script>
 <script>
 // side: 미리 준비된 반쪽 사진이 놓이는 위치 ('left' | 'right')
 const MISSIONS = [
@@ -544,6 +544,10 @@ async function uploadOne(id) {
     photo_path: `${base}.jpg`, thumb_path: `${base}_s.jpg`,
   });
   if (error) throw error;
+  // AI 채점 요청 (결과는 관리자만 볼 수 있음). 기다리지 않고, 실패해도 관리자 페이지에서 다시 채점 가능
+  if (CFG.AUTO_SCORE !== false) {
+    sb.functions.invoke('score', { body: { photo_path: `${base}.jpg` } }).catch(() => {});
+  }
 }
 
 /* ---------- 카메라 ---------- */

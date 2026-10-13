@@ -8,18 +8,18 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script>
 // 새 버전 자동 반영 (index.html 과 같은 version.json 사용)
-const APP_VERSION = '8';
+const APP_VERSION = '9';
 fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
   const u = new URL(location.href);
   if (v !== APP_VERSION && u.searchParams.get('v') !== v) { u.searchParams.set('v', v); location.replace(u); }
 }).catch(() => {});
 </script>
 <style>
-  :root { --bg: #f5f2ec; --ink: #1d2622; --ink-2: #5b6661; --ink-3: #98a19c; --line: #e7e2d8; --brand: #1f5d43; --brand-soft: #e5efe9; --danger: #c2413b;
+  :root { --bg: #f5f2ec; --ink: #1d2622; --ink-2: #5b6661; --ink-3: #98a19c; --line: #e7e2d8; --brand: #1f5d43; --brand-soft: #e5efe9; --danger: #c2413b; --gold: #b8892b;
           --shadow: 0 1px 2px rgba(29,38,34,.04), 0 8px 24px -12px rgba(29,38,34,.18); }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { margin: 0; font-family: "Pretendard Variable", Pretendard, -apple-system, system-ui, sans-serif; color: var(--ink); background: var(--bg); letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; }
-  button, input { font: inherit; color: inherit; }
+  button, input, select { font: inherit; color: inherit; }
   header { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: max(12px, env(safe-area-inset-top)) 16px 12px; background: rgba(245,242,236,.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
   header h1 { margin: 0; font-size: 16px; font-weight: 800; }
   header h1 small { display: block; font-size: 12px; font-weight: 600; color: var(--ink-3); }
@@ -28,6 +28,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   .btn { border: 1px solid var(--line); background: #fff; border-radius: 12px; padding: 10px 14px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
   .btn:disabled { opacity: .5; cursor: default; }
   .btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .btn.gold { background: var(--gold); border-color: var(--gold); color: #fff; }
   .btn.danger { color: var(--danger); border-color: #f0d3d1; background: #fff; }
   .btn.sm { padding: 7px 11px; font-size: 13px; border-radius: 10px; }
 
@@ -44,23 +45,33 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   .stat b { display: block; font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; }
   .stat span { font-size: 12.5px; color: var(--ink-2); }
 
-  .tools { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
-  .tools input { flex: 1 1 100%; padding: 11px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; font-size: 15px; }
-  @media (min-width: 640px) { .tools input { flex: 1 1 200px; } }
-  .tools .btn { flex: 1 1 auto; }
-  .updated { font-size: 12px; color: var(--ink-3); margin: 0 0 14px; }
+  .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .tools input { grid-column: 1 / -1; padding: 11px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; font-size: 15px; }
+  @media (min-width: 640px) { .tools { grid-template-columns: 2fr repeat(5, auto); } .tools input { grid-column: auto; } }
+  .updated { font-size: 12px; color: var(--ink-3); margin: 0 0 14px; line-height: 1.5; }
 
   .list { display: grid; gap: 12px; }
   .team { background: #fff; border-radius: 18px; padding: 14px; box-shadow: var(--shadow); }
   .team-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .team-head .l { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .rank { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 15px; font-weight: 800; background: #f1efe9; color: var(--ink-2); }
+  .rank.r1 { background: #f2c94c; color: #5a4300; } .rank.r2 { background: #d5d9dd; color: #3d464d; } .rank.r3 { background: #e0a878; color: #5a3010; } .rank.sp { background: #e8d9f7; color: #5a2d8a; }
   .team-head .name { font-size: 17px; font-weight: 800; }
   .team-head .meta { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
   .pill { font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: #f1efe9; color: var(--ink-2); white-space: nowrap; }
   .pill.ok { background: var(--brand-soft); color: var(--brand); }
+  .scorebox { display: flex; align-items: center; gap: 12px; background: #f8f6f1; border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; }
+  .scorebox .tot { white-space: nowrap; font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
+  .scorebox .tot small { font-size: 13px; font-weight: 600; color: var(--ink-3); }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 12px; color: var(--ink-2); }
+  .chips b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .chips .wit { color: #6b3fa0; }
+  .pending { font-size: 12.5px; color: var(--ink-3); }
   .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .th { position: relative; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; background: #f3f1ec; border: 0; padding: 0; cursor: zoom-in; }
   .th img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
   .th .lb { position: absolute; left: 6px; top: 6px; background: rgba(20,24,22,.66); color: #fff; font-size: 11px; font-weight: 700; padding: 3px 7px; border-radius: 999px; }
+  .th .sc { position: absolute; right: 6px; bottom: 6px; background: #fff; color: var(--ink); font-size: 12px; font-weight: 800; padding: 3px 7px; border-radius: 999px; box-shadow: var(--shadow); }
   .th.none { display: grid; place-items: center; color: var(--ink-3); font-size: 12px; cursor: default; }
   .team-actions { display: flex; gap: 8px; margin-top: 10px; }
   .team-actions .btn:first-child { flex: 1; }
@@ -79,6 +90,18 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   .batches { display: grid; gap: 8px; margin-bottom: 10px; }
   .batches .btn { padding: 13px; font-size: 15px; }
   .batches .btn.done { background: var(--brand-soft); border-color: var(--brand-soft); color: var(--brand); }
+
+  .detail { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-bottom: 12px; }
+  .detail .hd { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #f8f6f1; font-weight: 800; }
+  .detail .hd span:last-child { font-size: 20px; }
+  .detail dl { margin: 0; }
+  .detail .it { padding: 9px 12px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.5; }
+  .detail .it dt { display: flex; justify-content: space-between; font-weight: 700; }
+  .detail .it dd { margin: 2px 0 0; color: var(--ink-2); }
+  .detail .sum { padding: 10px 12px; border-top: 1px solid var(--line); font-size: 13.5px; background: #fffdf6; }
+  .detail .model { padding: 6px 12px 10px; font-size: 11px; color: var(--ink-3); }
+  .field { display: grid; gap: 6px; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--ink-2); }
+  .field select { padding: 11px 12px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; font-size: 15px; font-weight: 600; color: var(--ink); }
 
   .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px); opacity: 0; z-index: 30; background: var(--ink); color: #fff; font-size: 14px; font-weight: 600; padding: 12px 18px; border-radius: 999px; transition: .25s; pointer-events: none; white-space: nowrap; }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
@@ -106,12 +129,14 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
       <div class="stat"><b id="sPeople">0</b><span>참가 조(기기)</span></div>
       <div class="stat"><b id="sDone">0</b><span>3장 모두 전송</span></div>
       <div class="stat"><b id="sPhotos">0</b><span>받은 사진</span></div>
-      <div class="stat"><b id="sLast">-</b><span>마지막 전송</span></div>
+      <div class="stat"><b id="sScored">0</b><span>AI 채점 완료</span></div>
     </div>
     <div class="tools">
       <input type="search" id="q" placeholder="조 이름 검색">
+      <button class="btn primary" id="scoreAll">AI 채점</button>
+      <button class="btn gold" id="openResults">결과 발표 이미지</button>
       <button class="btn" id="reload">새로고침</button>
-      <button class="btn primary" id="saveAll">전체 사진 저장</button>
+      <button class="btn" id="saveAll">전체 사진 저장</button>
       <button class="btn danger" id="delAll">전체 삭제</button>
     </div>
     <p class="updated" id="updated"></p>
@@ -121,13 +146,15 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   <p class="empty" id="noConfig" hidden>config.js 에 Supabase 연결 정보가 없습니다.</p>
 </main>
 
-<!-- 사진 크게 보기 -->
+<!-- 사진 크게 보기 + 채점 상세 -->
 <div class="sheet-wrap" id="viewer">
   <div class="sheet">
     <h3 id="viewTitle"></h3>
     <img class="view" id="viewImg" alt="">
+    <div id="viewScore"></div>
     <div class="row">
       <button class="btn" id="viewClose">닫기</button>
+      <button class="btn" id="viewRescore">다시 채점</button>
       <button class="btn primary" id="viewSave" disabled>불러오는 중…</button>
     </div>
   </div>
@@ -143,9 +170,25 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   </div>
 </div>
 
+<!-- 결과 발표 이미지 -->
+<div class="sheet-wrap" id="results">
+  <div class="sheet">
+    <h3>결과 발표 이미지</h3>
+    <p>AI 채점 점수로 순위를 정했어요. 특별상(재치상)은 1~3등을 제외하고 재치 점수가 가장 높은 조가 자동으로 선택되며, 아래에서 바꿀 수 있어요.</p>
+    <label class="field">특별상 (재치상)
+      <select id="specialPick"></select>
+    </label>
+    <img class="view" id="resultImg" alt="결과 발표 이미지">
+    <div class="row">
+      <button class="btn" id="resultsClose">닫기</button>
+      <button class="btn primary" id="resultsSave" disabled>만드는 중…</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="config.js?v=8"></script>
+<script src="config.js?v=9"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
@@ -157,17 +200,38 @@ const safe = (s) => String(s).replace(/[\\/:*?"<>|]/g, '_').trim() || '이름없
 const fmt = (d) => new Date(d).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 const BATCH = 20;   // 휴대폰 공유 메뉴로 한 번에 넘길 사진 수
 
+// 채점 기준 (채점 함수 supabase/functions/score 와 같은 값)
+const CRIT = [
+  { key: 'alignment',   label: '선 연결',   max: 40 },
+  { key: 'perspective', label: '크기·원근', max: 25 },
+  { key: 'color',       label: '색감·밝기', max: 15 },
+  { key: 'teamwork',    label: '조원 참여', max: 20 },
+];
+const WIT = { key: 'wit', label: '재치', max: 20 };
+const PRIZES = [
+  { tag: '1등', prize: '올리브영 상품권 3만원', color: '#e2b23a' },
+  { tag: '2등', prize: '올리브영 상품권 2만원', color: '#9aa5ad' },
+  { tag: '3등', prize: '올리브영 상품권 1만원', color: '#c98a55' },
+];
+const SPECIAL = { tag: '특별상', sub: '재치상', prize: '올리브영 상품권 1만원', color: '#8a5cc2' };
+
 if (!CFG.SUPABASE_URL || !CFG.SUPABASE_ANON_KEY) {
   $('#noConfig').hidden = false;
   throw new Error('no config');
 }
 const sb = createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
 let people = [];
+let ranked = [];
+
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+};
 
 function toast(msg) {
   const t = $('#toast');
   t.textContent = msg; t.classList.add('show');
-  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2400);
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2600);
 }
 
 // 휴대폰(공유 메뉴로 사진첩 저장 가능)인지
@@ -194,15 +258,59 @@ $('#loginForm').onsubmit = async (e) => {
 };
 $('#logout').onclick = async () => { await sb.auth.signOut(); showSession(); };
 
+/* ---------- 점수 계산 ---------- */
+// 조 점수 = 미션 3장 점수의 평균 (빠진 미션은 0점). 세부 항목도 같은 방식
+function teamScore(p) {
+  const sum = { total: 0, wit: 0 };
+  CRIT.forEach((c) => { sum[c.key] = 0; });
+  let scored = 0, photos = 0;
+  for (const m of [1, 2, 3]) {
+    const r = p.missions[m];
+    if (!r) continue;
+    photos++;
+    if (!r.score) continue;
+    scored++;
+    sum.total += r.score.total;
+    sum.wit += r.score.wit;
+    CRIT.forEach((c) => { sum[c.key] += r.score[c.key]; });
+  }
+  const avg = {};
+  Object.keys(sum).forEach((k) => { avg[k] = Math.round((sum[k] / 3) * 10) / 10; });
+  return { ...avg, scored, photos, complete: photos > 0 && scored === photos };
+}
+
+// 총점 → 선 연결 → 크기·원근 → 먼저 끝낸 조 순
+function rankTeams() {
+  const list = people.filter((p) => p.ts.scored > 0);
+  list.sort((a, b) => b.ts.total - a.ts.total || b.ts.alignment - a.ts.alignment
+    || b.ts.perspective - a.ts.perspective || a.last.localeCompare(b.last));
+  list.forEach((p, i) => { p.rank = i + 1; });
+  people.filter((p) => !p.ts.scored).forEach((p) => { p.rank = null; });
+  return list;
+}
+
+function specialPid() {
+  const pool = ranked.slice(3);
+  const saved = store.get('specialPid');
+  if (saved && pool.some((p) => p.pid === saved)) return saved;
+  const best = [...pool].sort((a, b) => b.ts.wit - a.ts.wit || b.ts.total - a.ts.total)[0];
+  return best?.pid || null;
+}
+
 /* ---------- 목록 ---------- */
 async function load() {
   $('#list').innerHTML = '<div class="empty">불러오는 중…</div>';
-  const { data, error } = await sb.from('submissions').select('*').order('created_at', { ascending: true });
+  const [{ data, error }, { data: scores, error: scErr }] = await Promise.all([
+    sb.from('submissions').select('*').order('created_at', { ascending: true }),
+    sb.from('scores').select('*'),
+  ]);
   if (error) { $('#list').innerHTML = `<div class="empty">불러오기 실패: ${esc(error.message)}</div>`; return; }
+  const scoreMap = new Map((scores || []).map((s) => [s.submission_id, s]));
 
-  // 기기(참가 조)별로 묶음. 미션마다 가장 최근 사진을 보여주고, 삭제용으로 전체 기록도 보관
+  // 기기(참가 조)별로 묶음. 미션마다 가장 최근 사진을 쓰고, 삭제용으로 전체 기록도 보관
   const map = new Map();
   for (const r of data) {
+    r.score = scoreMap.get(r.id) || null;
     const p = map.get(r.participant_id) || { pid: r.participant_id, nickname: r.nickname, missions: {}, rows: [], last: r.created_at };
     p.nickname = r.nickname;
     p.missions[r.mission] = r;
@@ -210,7 +318,10 @@ async function load() {
     p.last = r.created_at;
     map.set(r.participant_id, p);
   }
-  people = [...map.values()].sort((a, b) => b.last.localeCompare(a.last));
+  people = [...map.values()];
+  people.forEach((p) => { p.ts = teamScore(p); });
+  ranked = rankTeams();
+  people.sort((a, b) => (a.rank ?? 1e9) - (b.rank ?? 1e9) || b.last.localeCompare(a.last));
 
   const paths = people.flatMap((p) => Object.values(p.missions).map((r) => r.thumb_path));
   const urls = {};
@@ -220,30 +331,45 @@ async function load() {
   }
   people.forEach((p) => Object.values(p.missions).forEach((r) => { r.thumbUrl = urls[r.thumb_path]; }));
 
+  const latest = people.flatMap((p) => Object.values(p.missions));
   $('#sPeople').textContent = people.length;
   $('#sDone').textContent = people.filter((p) => [1, 2, 3].every((m) => p.missions[m])).length;
-  $('#sPhotos').textContent = people.reduce((n, p) => n + Object.keys(p.missions).length, 0);
-  $('#sLast').textContent = people[0] ? fmt(people[0].last).replace(/^\d+\. \d+\. /, '') : '-';
-  $('#updated').textContent = `업데이트 ${new Date().toLocaleTimeString('ko-KR')} · 사진을 누르면 크게 보고 저장할 수 있어요`;
+  $('#sPhotos').textContent = latest.length;
+  $('#sScored').textContent = `${latest.filter((r) => r.score).length}/${latest.length}`;
+  $('#updated').textContent = `업데이트 ${new Date().toLocaleTimeString('ko-KR')} · 순위 = 미션 3장 평균 점수(빠진 미션 0점)`
+    + (scErr ? ' · ⚠ 점수 표를 불러오지 못했어요 (supabase-scores.sql 실행 필요)' : '');
   render();
+}
+
+function chipsHtml(ts) {
+  return CRIT.map((c) => `<span>${c.label} <b>${ts[c.key]}</b>/${c.max}</span>`).join('')
+    + `<span class="wit">${WIT.label} <b>${ts.wit}</b>/${WIT.max}</span>`;
 }
 
 function render() {
   const q = $('#q').value.trim().toLowerCase();
   const list = people.filter((p) => !q || p.nickname.toLowerCase().includes(q));
   if (!list.length) { $('#list').innerHTML = `<div class="empty">${people.length ? '검색 결과가 없어요.' : '아직 참여 기록이 없어요.'}</div>`; return; }
+  const sp = specialPid();
   $('#list').innerHTML = list.map((p) => {
     const n = Object.keys(p.missions).length;
     const thumbs = [1, 2, 3].map((m) => {
       const r = p.missions[m];
       if (!r) return `<div class="th none">미션 ${m} 없음</div>`;
-      return `<button class="th" data-view="${esc(p.pid)}" data-m="${m}"><img src="${esc(r.thumbUrl || '')}" alt="${esc(p.nickname)} 미션 ${m}" loading="lazy"><span class="lb">미션 ${m}</span></button>`;
+      return `<button class="th" data-view="${esc(p.pid)}" data-m="${m}"><img src="${esc(r.thumbUrl || '')}" alt="${esc(p.nickname)} 미션 ${m}" loading="lazy"><span class="lb">미션 ${m}</span>${
+        r.score ? `<span class="sc">${r.score.total}</span>` : ''}</button>`;
     }).join('');
+    const rk = p.rank ? `<span class="rank ${p.rank <= 3 ? 'r' + p.rank : p.pid === sp ? 'sp' : ''}">${p.pid === sp ? '특' : p.rank}</span>` : '';
+    const score = p.ts.scored
+      ? `<div class="scorebox"><div class="tot">${p.ts.total}<small>점</small></div><div class="chips">${chipsHtml(p.ts)}</div></div>`
+      : '';
+    const pending = p.ts.scored < p.ts.photos ? `<div class="pending">채점 대기 ${p.ts.photos - p.ts.scored}장 — ‘AI 채점’을 눌러 주세요</div>` : '';
     return `<article class="team">
       <div class="team-head">
-        <div><div class="name">${esc(p.nickname)}</div><div class="meta">${fmt(p.last)} · 기기 ${esc(p.pid.slice(0, 4))}</div></div>
-        <span class="pill ${n === 3 ? 'ok' : ''}">${n === 3 ? '완료' : n + ' / 3'}</span>
+        <div class="l">${rk}<div><div class="name">${esc(p.nickname)}</div><div class="meta">${fmt(p.last)} · 기기 ${esc(p.pid.slice(0, 4))}</div></div></div>
+        <span class="pill ${n === 3 ? 'ok' : ''}">${n === 3 ? '3장 완료' : n + ' / 3'}</span>
       </div>
+      ${score}${pending}
       <div class="thumbs">${thumbs}</div>
       <div class="team-actions">
         <button class="btn sm" data-save="${esc(p.pid)}">${n}장 ${canShareFiles ? '사진첩에 저장' : '다운로드'}</button>
@@ -255,6 +381,40 @@ function render() {
 
 $('#reload').onclick = () => load();
 $('#q').oninput = () => render();
+
+/* ---------- AI 채점 ---------- */
+async function scoreOne(id, rescore = false) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const { data, error } = await sb.functions.invoke('score', { body: { submission_id: id, rescore } });
+    if (!error) return data.score;
+    const status = error.context?.status;
+    if (status === 429 || status >= 500) { await new Promise((r) => setTimeout(r, 4000 * (attempt + 1))); continue; }
+    let msg = error.message;
+    try { msg = (await error.context.json()).error || msg; } catch {}
+    throw new Error(msg);
+  }
+  throw new Error('여러 번 시도했지만 채점하지 못했어요');
+}
+
+// 각 조·미션의 최신 사진 중 아직 채점되지 않은 것만 채점 (동시에 3장씩)
+$('#scoreAll').onclick = () => busy($('#scoreAll'), async (label) => {
+  const todo = people.flatMap((p) => Object.values(p.missions)).filter((r) => !r.score);
+  if (!todo.length) { toast('채점할 사진이 없어요'); return; }
+  let done = 0, failed = 0, lastErr = '';
+  label(`채점 중… 0/${todo.length}`);
+  const queue = [...todo];
+  await Promise.all([0, 1, 2].map(async () => {
+    while (queue.length) {
+      const r = queue.shift();
+      try { await scoreOne(r.id); } catch (e) { failed++; lastErr = e.message; }
+      done++;
+      label(`채점 중… ${done}/${todo.length}`);
+    }
+  }));
+  await load();
+  if (failed) alert(`${failed}장은 채점하지 못했어요. 다시 'AI 채점'을 누르면 남은 사진만 채점해요.\n\n사유: ${lastErr}`);
+  else toast(`${todo.length}장 채점 완료`);
+});
 
 /* ---------- 사진 가져오기 ---------- */
 // 파일 이름에 조 이름·미션 번호를 넣음 (예: 3조_미션1.jpg)
@@ -290,6 +450,15 @@ function downloadFile(f) {
   setTimeout(() => URL.revokeObjectURL(a.href), 10000);
 }
 
+async function shareOrDownload(files) {
+  if (canShareFiles) {
+    try { await navigator.share({ files }); return true; }
+    catch (e) { if (e.name !== 'AbortError') toast('저장하지 못했어요. 다시 눌러 주세요.'); return false; }
+  }
+  files.forEach(downloadFile);
+  return true;
+}
+
 // 휴대폰: 공유 메뉴 → "이미지 저장"으로 사진첩에 저장
 // (공유 메뉴는 버튼을 누른 직후에만 열 수 있어서, 사진을 먼저 받아두고 저장 버튼을 따로 띄움)
 function openSaver(title, files) {
@@ -303,14 +472,7 @@ function openSaver(title, files) {
     groups.length > 1 ? `${i * BATCH + 1}~${i * BATCH + g.length}번째 ` : ''}${canShareFiles ? '사진첩에 저장' : '다운로드'} (${g.length}장)</button>`).join('');
   $('#batches').querySelectorAll('[data-b]').forEach((b) => {
     b.onclick = async () => {
-      const g = groups[+b.dataset.b];
-      if (canShareFiles) {
-        try { await navigator.share({ files: g }); }
-        catch (e) { if (e.name !== 'AbortError') toast('저장하지 못했어요. 다시 눌러 주세요.'); return; }
-      } else {
-        g.forEach(downloadFile);
-      }
-      b.classList.add('done'); b.textContent = '✓ ' + b.textContent;
+      if (await shareOrDownload(groups[+b.dataset.b])) { b.classList.add('done'); b.textContent = '✓ ' + b.textContent; }
     };
   });
   $('#saver').classList.add('open');
@@ -321,7 +483,7 @@ async function busy(btn, fn) {
   const old = btn.textContent;
   btn.disabled = true;
   try { await fn((t) => { btn.textContent = t; }); }
-  catch (e) { console.error(e); alert('작업에 실패했어요. 잠시 후 다시 시도해 주세요.'); }
+  catch (e) { console.error(e); alert('작업에 실패했어요. 잠시 후 다시 시도해 주세요.\n\n' + (e.message || '')); }
   finally { btn.disabled = false; btn.textContent = old; }
 }
 
@@ -331,8 +493,7 @@ async function savePerson(pid, btn) {
   if (!p) return;
   await busy(btn, async (label) => {
     label('준비 중…');
-    const files = await collect([p]);
-    openSaver(`${p.nickname} 사진 저장`, files);
+    openSaver(`${p.nickname} 사진 저장`, await collect([p]));
   });
 }
 
@@ -347,14 +508,23 @@ $('#saveAll').onclick = () => busy($('#saveAll'), async (label) => {
   downloadFile(new File([await zip.generateAsync({ type: 'blob' })], '덕수궁_반쪽찾기_전체.zip'));
 });
 
-/* ---------- 크게 보기 ---------- */
-let viewFile = null;
+/* ---------- 크게 보기 + 채점 상세 ---------- */
+let viewFile = null, viewRow = null;
+function scoreDetailHtml(s) {
+  if (!s) return '<p>아직 채점되지 않았어요.</p>';
+  const items = [...CRIT, WIT].map((c) => `<div class="it"><dt><span>${c.label}${c === WIT ? ' (특별상용·총점 제외)' : ''}</span><span>${s[c.key]} / ${c.max}</span></dt><dd>${esc(s.reasons?.[c.key] || '')}</dd></div>`).join('');
+  return `<div class="detail"><div class="hd"><span>AI 채점</span><span>${s.total} / 100</span></div><dl>${items}</dl>
+    <div class="sum">${esc(s.summary || '')}</div><div class="model">${esc(s.model || '')} · ${fmt(s.created_at)}</div></div>`;
+}
+
 async function openViewer(pid, m) {
   const p = people.find((x) => x.pid === pid);
   if (!p) return;
-  viewFile = null;
+  viewFile = null; viewRow = p.missions[m];
   $('#viewTitle').textContent = `${p.nickname} · 미션 ${m}`;
-  $('#viewImg').src = p.missions[m].thumbUrl || '';
+  $('#viewImg').src = viewRow.thumbUrl || '';
+  $('#viewScore').innerHTML = scoreDetailHtml(viewRow.score);
+  $('#viewRescore').textContent = viewRow.score ? '다시 채점' : '채점하기';
   $('#viewSave').disabled = true; $('#viewSave').textContent = '불러오는 중…';
   $('#viewer').classList.add('open');
   try {
@@ -368,14 +538,186 @@ async function openViewer(pid, m) {
     $('#viewSave').textContent = '불러오기 실패';
   }
 }
-$('#viewSave').onclick = async () => {
-  if (!viewFile) return;
-  if (canShareFiles) {
-    try { await navigator.share({ files: [viewFile] }); }
-    catch (e) { if (e.name !== 'AbortError') toast('저장하지 못했어요. 다시 눌러 주세요.'); }
-  } else downloadFile(viewFile);
+$('#viewSave').onclick = () => { if (viewFile) shareOrDownload([viewFile]); };
+$('#viewRescore').onclick = () => {
+  if (!viewRow) return;
+  if (viewRow.score && !confirm('이 사진을 다시 채점할까요?\n점수가 바뀔 수 있어요. 공정성을 위해 발표 전에만 사용하세요.')) return;
+  busy($('#viewRescore'), async (label) => {
+    label('채점 중…');
+    viewRow.score = await scoreOne(viewRow.id, true);
+    $('#viewScore').innerHTML = scoreDetailHtml(viewRow.score);
+    await load();
+  });
 };
 $('#viewClose').onclick = () => $('#viewer').classList.remove('open');
+
+/* ---------- 결과 발표 이미지 ---------- */
+let resultFile = null;
+
+async function loadThumb(r) {
+  if (!r) return null;
+  const { data } = await sb.storage.from('photos').download(r.thumb_path);
+  return data ? createImageBitmap(data) : null;
+}
+
+function roundRect(g, x, y, w, h, r) {
+  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+function fitText(g, text, maxW) {
+  if (g.measureText(text).width <= maxW) return text;
+  let t = text;
+  while (t.length > 1 && g.measureText(t + '…').width > maxW) t = t.slice(0, -1);
+  return t + '…';
+}
+
+async function drawResults() {
+  await document.fonts.load('800 40px "Pretendard Variable"').catch(() => {});
+  const F = (w, s) => `${w} ${s}px "Pretendard Variable", Pretendard, sans-serif`;
+  const W = 1080, PAD = 56;
+  const spPid = specialPid();
+  const top = ranked.slice(0, 3);
+  const sp = ranked.find((p) => p.pid === spPid);
+  const rest = ranked.filter((p, i) => i >= 3 && p.pid !== spPid);
+  const winners = [...top.map((p, i) => ({ p, ...PRIZES[i] })), ...(sp ? [{ p: sp, ...SPECIAL }] : [])];
+
+  const CARD = 300, GAP = 22, ROW = 58;
+  const H = 300 + winners.length * (CARD + GAP) + (rest.length ? 120 + rest.length * ROW : 0) + 190;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  g.fillStyle = '#f5f2ec'; g.fillRect(0, 0, W, H);
+
+  // 헤더
+  g.fillStyle = '#1f5d43'; g.fillRect(0, 0, W, 250);
+  g.fillStyle = 'rgba(255,255,255,.75)'; g.font = F(600, 26); g.textBaseline = 'alphabetic';
+  g.fillText('KDB생명보험지부 2026 임시대의원대회 1부', PAD, 80);
+  g.fillStyle = '#fff'; g.font = F(800, 58);
+  g.fillText('덕수궁 잃어버린 반쪽을 찾아라', PAD, 152);
+  g.fillStyle = '#f2c94c'; g.font = F(800, 34);
+  g.fillText('결과 발표', PAD, 205);
+
+  // 수상 조 카드
+  const thumbs = await Promise.all(winners.map((w) => Promise.all([1, 2, 3].map((m) => loadThumb(w.p.missions[m]).catch(() => null)))));
+  let y = 290;
+  winners.forEach((w, i) => {
+    const p = w.p, ts = p.ts;
+    g.save();
+    g.shadowColor = 'rgba(29,38,34,.12)'; g.shadowBlur = 24; g.shadowOffsetY = 8;
+    g.fillStyle = '#fff'; roundRect(g, PAD, y, W - PAD * 2, CARD, 28); g.fill();
+    g.restore();
+    g.fillStyle = w.color; roundRect(g, PAD, y, 14, CARD, 7); g.fill();
+
+    const x = PAD + 44;
+    // 상 이름
+    g.fillStyle = w.color; roundRect(g, x, y + 30, w.sub ? 176 : 92, 48, 24); g.fill();
+    g.fillStyle = '#fff'; g.font = F(800, 26); g.textAlign = 'center';
+    g.fillText(w.sub ? `${w.tag} · ${w.sub}` : w.tag, x + (w.sub ? 88 : 46), y + 63);
+    g.textAlign = 'left';
+    g.fillStyle = '#5b6661'; g.font = F(600, 22);
+    g.fillText(w.prize, x + (w.sub ? 192 : 108), y + 62);
+
+    // 조 이름 + 점수
+    g.fillStyle = '#1d2622'; g.font = F(800, 52);
+    g.fillText(fitText(g, p.nickname, 420), x, y + 148);
+    g.textAlign = 'right';
+    g.font = F(800, 64); g.fillStyle = '#1d2622';
+    const big = w.sub ? `${ts.wit}` : `${ts.total}`;
+    const unit = w.sub ? ` / ${WIT.max} 재치` : ' 점';
+    g.font = F(600, 24); const uw = g.measureText(unit).width;
+    g.fillStyle = '#98a19c'; g.fillText(unit, W - PAD - 36, y + 148);
+    g.font = F(800, 64); g.fillStyle = w.sub ? w.color : '#1d2622';
+    g.fillText(big, W - PAD - 36 - uw, y + 148);
+    g.textAlign = 'left';
+
+    // 세부 점수
+    g.font = F(600, 21); g.fillStyle = '#5b6661';
+    const parts = CRIT.map((cr) => `${cr.label} ${ts[cr.key]}/${cr.max}`);
+    parts.push(w.sub ? `총점 ${ts.total}/100` : `재치 ${ts.wit}/${WIT.max}`);
+    g.fillText(parts.join('   ·   '), x, y + 196);
+
+    // 미션 사진 3장
+    const tw = 150, th = 70, ty = y + 218;
+    thumbs[i].forEach((bmp, k) => {
+      const tx = x + k * (tw + 12);
+      g.save(); roundRect(g, tx, ty, tw, th, 12); g.clip();
+      g.fillStyle = '#eceae4'; g.fillRect(tx, ty, tw, th);
+      if (bmp) {
+        const sh = bmp.width * th / tw;   // 위쪽(건물)부터 잘라서 표시
+        g.drawImage(bmp, 0, 0, bmp.width, Math.min(sh, bmp.height), tx, ty, tw, th);
+      }
+      g.restore();
+      g.fillStyle = 'rgba(20,24,22,.66)'; roundRect(g, tx + 8, ty + 8, 66, 26, 13); g.fill();
+      g.fillStyle = '#fff'; g.font = F(700, 15); g.fillText(`미션 ${k + 1}`, tx + 17, ty + 27);
+    });
+    // 한 줄 평 대신 미션별 점수
+    g.font = F(600, 19); g.fillStyle = '#98a19c';
+    const per = [1, 2, 3].map((m) => `미션${m} ${p.missions[m]?.score?.total ?? '-'}`).join('  ·  ');
+    g.textAlign = 'right'; g.fillText(per, W - PAD - 36, ty + 44); g.textAlign = 'left';
+
+    y += CARD + GAP;
+  });
+
+  // 나머지 조
+  if (rest.length) {
+    y += 40;
+    g.fillStyle = '#1d2622'; g.font = F(800, 30); g.fillText('전체 순위', PAD, y); y += 26;
+    g.fillStyle = '#fff'; roundRect(g, PAD, y, W - PAD * 2, rest.length * ROW + 20, 22); g.fill();
+    y += 10;
+    rest.forEach((p, i) => {
+      const cy = y + i * ROW;
+      if (i) { g.fillStyle = '#efebe3'; g.fillRect(PAD + 24, cy, W - PAD * 2 - 48, 1); }
+      g.fillStyle = '#98a19c'; g.font = F(800, 22); g.textAlign = 'center'; g.fillText(`${p.rank}`, PAD + 48, cy + 37);
+      g.textAlign = 'left'; g.fillStyle = '#1d2622'; g.font = F(700, 23); g.fillText(fitText(g, p.nickname, 200), PAD + 88, cy + 37);
+      g.fillStyle = '#5b6661'; g.font = F(500, 17);
+      g.fillText(CRIT.map((cr) => `${cr.label} ${p.ts[cr.key]}`).join(' · ') + ` · 재치 ${p.ts.wit}`, PAD + 300, cy + 36);
+      g.textAlign = 'right'; g.fillStyle = '#1d2622'; g.font = F(800, 24); g.fillText(`${p.ts.total}`, W - PAD - 28, cy + 38); g.textAlign = 'left';
+    });
+    y += rest.length * ROW + 10;
+  }
+
+  // 채점 기준 안내
+  y += 46;
+  g.fillStyle = '#1d2622'; g.font = F(800, 22); g.fillText('채점 기준', PAD, y);
+  g.font = F(500, 19); g.fillStyle = '#5b6661';
+  const lines = [
+    `${CRIT.map((cr) => `${cr.label} ${cr.max}점`).join(' + ')} = 100점   |   재치 ${WIT.max}점 (특별상 전용, 총점 제외)`,
+    '미션 사진마다 AI(Claude)가 같은 기준으로 채점 → 조 점수는 미션 3장 평균 (제출하지 않은 미션은 0점)',
+    '동점일 때: 선 연결 → 크기·원근 → 먼저 제출한 조 순   |   특별상: 1~3등을 제외하고 재치 점수가 가장 높은 조',
+  ];
+  lines.forEach((t, i) => g.fillText(t, PAD, y + 38 + i * 32));
+
+  return new Promise((ok) => c.toBlob(ok, 'image/png'));
+}
+
+async function refreshResults() {
+  $('#resultsSave').disabled = true; $('#resultsSave').textContent = '만드는 중…';
+  const blob = await drawResults();
+  resultFile = new File([blob], '반쪽찾기_결과발표.png', { type: 'image/png' });
+  $('#resultImg').src = URL.createObjectURL(blob);
+  $('#resultsSave').disabled = false;
+  $('#resultsSave').textContent = canShareFiles ? '사진첩에 저장' : '이미지 다운로드';
+}
+
+$('#openResults').onclick = async () => {
+  if (!ranked.length) { alert('채점된 조가 없어요. 먼저 ‘AI 채점’을 눌러 주세요.'); return; }
+  const pending = people.filter((p) => p.ts.scored < p.ts.photos).length;
+  if (pending && !confirm(`아직 채점이 끝나지 않은 조가 ${pending}개 있어요. 그대로 결과 이미지를 만들까요?`)) return;
+  const pool = ranked.slice(3);
+  const sp = specialPid();
+  $('#specialPick').innerHTML = pool.length
+    ? pool.map((p) => `<option value="${esc(p.pid)}" ${p.pid === sp ? 'selected' : ''}>${esc(p.nickname)} — 재치 ${p.ts.wit} · 총점 ${p.ts.total}</option>`).join('')
+    : '<option value="">해당 조 없음 (4개 조 이상 필요)</option>';
+  $('#results').classList.add('open');
+  await refreshResults();
+};
+$('#specialPick').onchange = async () => {
+  store.set('specialPid', $('#specialPick').value);
+  render();
+  await refreshResults();
+};
+$('#resultsSave').onclick = () => { if (resultFile) shareOrDownload([resultFile]); };
+$('#resultsClose').onclick = () => $('#results').classList.remove('open');
 
 /* ---------- 삭제 ---------- */
 async function removePaths(paths) {
@@ -388,7 +730,7 @@ async function removePaths(paths) {
 async function deletePerson(pid, btn) {
   const p = people.find((x) => x.pid === pid);
   if (!p) return;
-  if (!confirm(`'${p.nickname}'의 기록과 사진을 모두 삭제할까요?\n삭제하면 되돌릴 수 없어요.`)) return;
+  if (!confirm(`'${p.nickname}'의 기록과 사진(점수 포함)을 모두 삭제할까요?\n삭제하면 되돌릴 수 없어요.`)) return;
   await busy(btn, async (label) => {
     label('삭제 중…');
     await removePaths(p.rows.flatMap((r) => [r.photo_path, r.thumb_path]));
@@ -399,9 +741,9 @@ async function deletePerson(pid, btn) {
   });
 }
 
-// 전체 삭제: 저장소의 모든 사진(전송 중 끊겨 기록 없이 남은 파일 포함)과 모든 기록
+// 전체 삭제: 저장소의 모든 사진(전송 중 끊겨 기록 없이 남은 파일 포함)과 모든 기록·점수
 $('#delAll').onclick = () => {
-  const typed = prompt('모든 조의 기록과 사진을 삭제합니다. 되돌릴 수 없어요.\n계속하려면 "전체삭제"를 입력하세요.');
+  const typed = prompt('모든 조의 기록·사진·점수를 삭제합니다. 되돌릴 수 없어요.\n계속하려면 "전체삭제"를 입력하세요.');
   if (typed === null) return;
   if (typed.replace(/\s/g, '') !== '전체삭제') { alert('입력이 맞지 않아 취소했어요.'); return; }
   busy($('#delAll'), async (label) => {
@@ -417,6 +759,7 @@ $('#delAll').onclick = () => {
     await removePaths(paths);
     const { error } = await sb.from('submissions').delete().gt('id', 0);
     if (error) throw error;
+    store.set('specialPid', '');
     toast('전체 삭제 완료');
     await load();
   });
