@@ -9,8 +9,15 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script>
+// ?reset 으로 열면 이 기기의 진행 기록(조 이름·저장 사진·전송 상태)을 지우고 처음부터 시작
+if (new URLSearchParams(location.search).has('reset')) {
+  try { localStorage.clear(); } catch {}
+  try { indexedDB.deleteDatabase('half-shots'); } catch {}
+  location.replace(location.pathname);
+}
+
 // 새 버전 자동 반영: 배포할 때 APP_VERSION 과 version.json 의 v 를 같이 올릴 것
-const APP_VERSION = '5';
+const APP_VERSION = '6';
 fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
   const u = new URL(location.href);
   if (v !== APP_VERSION && u.searchParams.get('v') !== v) {
@@ -348,7 +355,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   </form>
 </div>
 
-<script src="config.js?v=5"></script>
+<script src="config.js?v=6"></script>
 <script>
 // side: 미리 준비된 반쪽 사진이 놓이는 위치 ('left' | 'right')
 const MISSIONS = [
