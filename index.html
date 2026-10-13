@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>잃어버린 반쪽을 찾아라 | KDB생명보험지부 2026 임시대의원대회</title>
+<title>임시대의원대회 1부 반쪽 찾기 | KDB생명보험지부 2026</title>
 <meta name="description" content="KDB생명보험지부 2026년 임시대의원대회 · 덕수궁 사진 미션">
 <meta name="theme-color" content="#f5f2ec">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script>
 // 새 버전 자동 반영: 배포할 때 APP_VERSION 과 version.json 의 v 를 같이 올릴 것
-const APP_VERSION = '4';
+const APP_VERSION = '5';
 fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
   const u = new URL(location.href);
   if (v !== APP_VERSION && u.searchParams.get('v') !== v) {
@@ -225,9 +225,9 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
 </div>
 
 <header>
-  <div class="event"><span class="org">KDB생명보험지부</span><span class="name">2026년 임시대의원대회</span></div>
-  <h1>잃어버린 <em>반쪽</em>을<br>찾아라</h1>
-  <p class="lead">덕수궁 곳곳에 숨은 같은 건물을 찾아, 사진 속 나머지 반쪽을 우리 조 셀카와 함께 완성해 보세요.</p>
+  <div class="event"><span class="org">KDB생명보험지부</span><span class="name">2026</span></div>
+  <h1>임시대의원대회 1부<br><em>반쪽</em> 찾기</h1>
+  <p class="lead">덕수궁 곳곳에 숨은 같은 건물을 찾아, 사진 속 나머지 반쪽을 우리 조원들과 완성해보세요.</p>
   <ol class="steps">
     <li><b>STEP 1</b>건물 찾기</li>
     <li><b>STEP 2</b>촬영 후 저장</li>
@@ -238,7 +238,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
 
 <main id="missions"></main>
 
-<footer>덕수궁 · 잃어버린 반쪽을 찾아라</footer>
+<footer>KDB생명보험지부 2026 임시대의원대회 1부 · 덕수궁</footer>
 
 <!-- 하단 진행 바 -->
 <div class="dock">
@@ -348,7 +348,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   </form>
 </div>
 
-<script src="config.js?v=4"></script>
+<script src="config.js?v=5"></script>
 <script>
 // side: 미리 준비된 반쪽 사진이 놓이는 위치 ('left' | 'right')
 const MISSIONS = [
@@ -638,7 +638,7 @@ async function compose(source, sw, sh, mirror) {
   g.fillStyle = 'rgba(255,255,255,.62)';
   g.font = '500 34px "Pretendard Variable", Pretendard, sans-serif';
   g.textAlign = 'right';
-  g.fillText('KDB생명보험지부 2026 임시대의원대회 · 덕수궁', OUT - 56, OUT + BAND / 2);
+  g.fillText('KDB생명보험지부 2026 임시대의원대회 1부 · 덕수궁', OUT - 56, OUT + BAND / 2);
 
   // 카드에 보여줄 촬영 반쪽 썸네일
   const t = document.createElement('canvas');
@@ -778,7 +778,7 @@ function finishSubmit() {
 async function saveAllToPhone() {
   const files = MISSIONS.map((m) => new File([shots[m.id].blob], `덕수궁_반쪽찾기_미션${m.id}.jpg`, { type: 'image/jpeg' }));
   if (navigator.canShare?.({ files })) {
-    try { await navigator.share({ files, title: '잃어버린 반쪽을 찾아라' }); return; }
+    try { await navigator.share({ files, title: '임시대의원대회 1부 반쪽 찾기' }); return; }
     catch (e) { if (e.name === 'AbortError') return; }
   }
   for (const f of files) {
