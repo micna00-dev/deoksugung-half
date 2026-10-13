@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>반쪽찾기 관리자</title>
+<style>
+  :root { --ink: #3b2a20; --line: #e8e1d6; --bg: #faf8f4; --green: #2c7a3a; --muted: #8a7a70; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color: var(--ink); background: var(--bg); }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; border-bottom: 1px solid var(--line); background: #fff; flex-wrap: wrap; }
+  h1 { margin: 0; font-size: 19px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+  button, input { font: inherit; }
+  .btn { border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 14px; cursor: pointer; }
+  .btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
+  .login { max-width: 360px; margin: 60px auto; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+  .login h2 { margin: 0 0 16px; font-size: 18px; }
+  .login label { display: block; font-size: 14px; margin: 10px 0 4px; }
+  .login input { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
+  .login .btn { width: 100%; margin-top: 16px; padding: 11px; }
+  .err { color: #c0392b; font-size: 14px; min-height: 20px; margin-top: 10px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
+  .stat b { display: block; font-size: 26px; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 13px; color: var(--muted); }
+  .tools { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+  .tools input { flex: 1; min-width: 160px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; }
+  .wrap { overflow-x: auto; background: #fff; border: 1px solid var(--line); border-radius: 14px; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; }
+  th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; font-size: 14px; }
+  th { font-size: 13px; color: var(--muted); font-weight: 600; background: #fdfcfa; }
+  tr:last-child td { border-bottom: 0; }
+  td.ph { width: 120px; }
+  td.ph img { width: 96px; height: auto; border-radius: 6px; display: block; cursor: zoom-in; }
+  td.ph .none { color: #c9c0b5; font-size: 13px; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 13px; background: #eee; }
+  .pill.ok { background: #dff3e2; color: var(--green); }
+  .nick { font-weight: 600; }
+  .sub { font-size: 12px; color: var(--muted); }
+  .empty { padding: 40px; text-align: center; color: var(--muted); }
+  dialog { border: 0; border-radius: 14px; padding: 0; max-width: min(92vw, 720px); }
+  dialog img { display: block; width: 100%; height: auto; }
+  dialog .bar { display: flex; justify-content: space-between; gap: 8px; padding: 10px; }
+  dialog::backdrop { background: rgba(0,0,0,.6); }
+</style>
+</head>
+<body>
+<header>
+  <h1>잃어버린 반쪽을 찾아라 · 관리자</h1>
+  <div id="who" hidden><span id="whoEmail" class="sub"></span> <button class="btn" id="logout">로그아웃</button></div>
+</header>
+
+<main>
+  <form class="login" id="loginForm" hidden>
+    <h2>관리자 로그인</h2>
+    <label for="email">이메일</label>
+    <input type="email" id="email" autocomplete="username" required>
+    <label for="pw">비밀번호</label>
+    <input type="password" id="pw" autocomplete="current-password" required>
+    <button class="btn primary">로그인</button>
+    <div class="err" id="loginErr"></div>
+  </form>
+
+  <section id="board" hidden>
+    <div class="stats">
+      <div class="stat"><b id="sPeople">0</b><span>참가자</span></div>
+      <div class="stat"><b id="sDone">0</b><span>3개 미션 완료</span></div>
+      <div class="stat"><b id="sM1">0</b><span>미션 1 완료</span></div>
+      <div class="stat"><b id="sM2">0</b><span>미션 2 완료</span></div>
+      <div class="stat"><b id="sM3">0</b><span>미션 3 완료</span></div>
+    </div>
+    <div class="tools">
+      <input type="search" id="q" placeholder="닉네임 검색">
+      <button class="btn" id="reload">새로고침</button>
+      <span class="sub" id="updated"></span>
+    </div>
+    <div class="wrap"><table>
+      <thead><tr><th>닉네임</th><th>미션 1</th><th>미션 2</th><th>미션 3</th><th>상태</th><th>마지막 참여</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+  </section>
+
+  <p class="empty" id="noConfig" hidden>config.js 에 Supabase 연결 정보가 없습니다.</p>
+</main>
+
+<dialog id="viewer">
+  <img id="viewImg" alt="">
+  <div class="bar"><a class="btn" id="viewDl" download>원본 다운로드</a><button class="btn" id="viewClose">닫기</button></div>
+</dialog>
+
+<script src="config.js"></script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+
+const CFG = window.APP_CONFIG || {};
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+if (!CFG.SUPABASE_URL || !CFG.SUPABASE_ANON_KEY) {
+  $('#noConfig').hidden = false;
+  throw new Error('no config');
+}
+const sb = createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+let people = [];
+
+async function showSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  $('#loginForm').hidden = !!session;
+  $('#board').hidden = !session;
+  $('#who').hidden = !session;
+  if (session) { $('#whoEmail').textContent = session.user.email; load(); }
+}
+
+$('#loginForm').onsubmit = async (e) => {
+  e.preventDefault();
+  $('#loginErr').textContent = '';
+  const { error } = await sb.auth.signInWithPassword({ email: $('#email').value, password: $('#pw').value });
+  if (error) { $('#loginErr').textContent = '로그인 실패: 이메일 또는 비밀번호를 확인하세요.'; return; }
+  $('#pw').value = '';
+  showSession();
+};
+$('#logout').onclick = async () => { await sb.auth.signOut(); showSession(); };
+$('#reload').onclick = () => load();
+$('#q').oninput = () => render();
+
+async function load() {
+  $('#rows').innerHTML = '<tr><td colspan="6" class="empty">불러오는 중…</td></tr>';
+  const { data, error } = await sb.from('submissions').select('*').order('created_at', { ascending: true });
+  if (error) { $('#rows').innerHTML = `<tr><td colspan="6" class="empty">불러오기 실패: ${esc(error.message)}</td></tr>`; return; }
+
+  // 참가자별로 묶고, 미션마다 가장 최근 사진만 사용
+  const map = new Map();
+  for (const r of data) {
+    const p = map.get(r.participant_id) || { pid: r.participant_id, nickname: r.nickname, missions: {}, last: r.created_at };
+    p.nickname = r.nickname;
+    p.missions[r.mission] = r;
+    p.last = r.created_at;
+    map.set(r.participant_id, p);
+  }
+  people = [...map.values()].sort((a, b) => b.last.localeCompare(a.last));
+
+  // 목록용 작은 사진 서명 URL (1시간 유효)
+  const paths = people.flatMap((p) => Object.values(p.missions).map((r) => r.thumb_path));
+  const urls = {};
+  for (let i = 0; i < paths.length; i += 100) {
+    const { data: signed } = await sb.storage.from('photos').createSignedUrls(paths.slice(i, i + 100), 3600);
+    signed?.forEach((s) => { if (s.signedUrl) urls[s.path] = s.signedUrl; });
+  }
+  people.forEach((p) => Object.values(p.missions).forEach((r) => { r.thumbUrl = urls[r.thumb_path]; }));
+
+  const count = (fn) => people.filter(fn).length;
+  $('#sPeople').textContent = people.length;
+  $('#sDone').textContent = count((p) => [1, 2, 3].every((m) => p.missions[m]));
+  [1, 2, 3].forEach((m) => { $('#sM' + m).textContent = count((p) => p.missions[m]); });
+  $('#updated').textContent = '업데이트 ' + new Date().toLocaleTimeString('ko-KR');
+  render();
+}
+
+function render() {
+  const q = $('#q').value.trim().toLowerCase();
+  const list = people.filter((p) => !q || p.nickname.toLowerCase().includes(q));
+  if (!list.length) { $('#rows').innerHTML = '<tr><td colspan="6" class="empty">아직 참여 기록이 없어요.</td></tr>'; return; }
+  $('#rows').innerHTML = list.map((p) => {
+    const cells = [1, 2, 3].map((m) => {
+      const r = p.missions[m];
+      if (!r) return '<td class="ph"><span class="none">—</span></td>';
+      return `<td class="ph"><img src="${esc(r.thumbUrl || '')}" alt="미션 ${m}" data-path="${esc(r.photo_path)}" data-name="${esc(p.nickname)}_미션${m}.jpg" loading="lazy"></td>`;
+    }).join('');
+    const n = Object.keys(p.missions).length;
+    const t = new Date(p.last).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return `<tr><td><div class="nick">${esc(p.nickname)}</div><div class="sub">${esc(p.pid.slice(0, 8))}</div></td>${cells}
+      <td><span class="pill ${n === 3 ? 'ok' : ''}">${n === 3 ? '완료 🎉' : n + ' / 3'}</span></td><td class="sub">${t}</td></tr>`;
+  }).join('');
+}
+
+// 사진 클릭 → 원본 보기
+$('#rows').onclick = async (e) => {
+  const img = e.target.closest('img[data-path]');
+  if (!img) return;
+  const { data } = await sb.storage.from('photos').createSignedUrl(img.dataset.path, 3600, { download: img.dataset.name });
+  const { data: view } = await sb.storage.from('photos').createSignedUrl(img.dataset.path, 3600);
+  if (!view) return;
+  $('#viewImg').src = view.signedUrl;
+  $('#viewDl').href = data?.signedUrl || view.signedUrl;
+  $('#viewer').showModal();
+};
+$('#viewClose').onclick = () => $('#viewer').close();
+
+showSession();
+</script>
+</body>
+</html>

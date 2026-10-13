@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>잃어버린 반쪽을 찾아라!! | 덕수궁</title>
+<meta name="description" content="사진 속 건물의 반쪽과 셀카를 찍어 완성해보세요. 덕수궁 곳곳에서 같은 건물을 찾아보세요!">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #4a2c1d;
+    --sky: #e6f5fd;
+    --green: #2c7a3a;
+    --pink: #ec3f73;
+    --blue: #1f86d0;
+    --muted: #b9b9b9;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Jua", system-ui, sans-serif;
+    color: var(--ink);
+    background: linear-gradient(#cfeefc 0, #f4fbff 260px, #fffdf6 100%);
+    min-height: 100vh;
+  }
+  header { text-align: center; padding: 28px 16px 8px; }
+  h1 { margin: 0; font-size: clamp(30px, 9vw, 52px); font-weight: 400; line-height: 1.15; letter-spacing: -1px;
+       text-shadow: 3px 3px 0 #fff, -3px -3px 0 #fff, 3px -3px 0 #fff, -3px 3px 0 #fff; }
+  h1 .a { color: #1d5fc9; } h1 .b { color: var(--pink); } h1 .c { color: var(--ink); } h1 .d { color: var(--green); }
+  .lead { margin: 10px 0 14px; font-size: 18px; }
+  .ribbon { display: inline-block; background: var(--green); color: #fff; padding: 9px 20px; border-radius: 999px; font-size: 17px; }
+  .ribbon em { font-style: normal; color: #ffe14d; }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 18px 16px 40px;
+         display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
+  .card { border-radius: 22px; padding: 14px 14px 16px; border: 3px solid; background: #fff; }
+  .card[data-c="pink"]  { border-color: #f8c8d6; background: #fff5f8; --accent: var(--pink); }
+  .card[data-c="blue"]  { border-color: #bfe3f7; background: #f2faff; --accent: var(--blue); }
+  .card[data-c="green"] { border-color: #cbe9be; background: #f6fcf2; --accent: var(--green); }
+  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .badge { background: var(--accent); color: #fff; border-radius: 999px; padding: 5px 16px; font-size: 22px; }
+  .card-head span:last-child { font-size: 20px; }
+
+  .frame { display: grid; grid-template-columns: 1fr 1fr; aspect-ratio: 1 / 1; border-radius: 16px; overflow: hidden;
+           background: #fff; border: 2px solid #eee; }
+  .frame img.half { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .shot { border: 0; padding: 0; margin: 0; background: #fff; cursor: pointer; display: grid; place-items: center;
+          border-left: 2px dashed #ddd; position: relative; font: inherit; color: #9a9a9a; }
+  .frame.rev .shot { border-left: 0; border-right: 2px dashed #ddd; }
+  .shot svg { width: 46%; max-width: 110px; }
+  .shot small { position: absolute; bottom: 14%; font-size: 15px; }
+  .shot:active { background: #f6f6f6; }
+  .shot img.done { width: 100%; height: 100%; object-fit: cover; }
+
+  .check { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 14px; font-size: 21px; }
+  .box { width: 36px; height: 36px; border: 3px solid var(--ink); border-radius: 9px; display: grid; place-items: center; background: #fff; }
+  .box svg { width: 24px; visibility: hidden; color: var(--accent); }
+  .card.is-done .box svg { visibility: visible; }
+
+  footer { text-align: center; font-size: 14px; color: #8a7a70; padding: 0 16px 30px; }
+
+  /* ---------- 카메라 화면 ---------- */
+  .layer { position: fixed; inset: 0; background: #111; color: #fff; display: none; flex-direction: column; z-index: 10; }
+  .layer.open { display: flex; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: max(12px, env(safe-area-inset-top)) 16px 10px; font-size: 19px; }
+  .iconbtn { background: rgba(255,255,255,.14); color: #fff; border: 0; border-radius: 999px; width: 44px; height: 44px;
+             font-size: 22px; cursor: pointer; display: grid; place-items: center; font-family: inherit; }
+  .stage-wrap { flex: 1; display: grid; place-items: center; padding: 8px 12px; min-height: 0; }
+  .stage { position: relative; display: grid; grid-template-columns: 1fr 1fr; aspect-ratio: 1 / 1;
+           width: min(100%, calc(100vh - 230px)); width: min(100%, calc(100dvh - 230px)); border-radius: 14px; overflow: hidden; background: #000; }
+  .stage img, .stage video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .stage video.mirror { transform: scaleX(-1); }
+  .stage .seam { position: absolute; top: 0; bottom: 0; left: 50%; border-left: 2px dashed rgba(255,255,255,.85); pointer-events: none; }
+  .stage .msg { display: grid; place-items: center; text-align: center; padding: 12px; font-size: 16px; line-height: 1.5; color: #ddd; }
+  .hint { text-align: center; font-size: 15px; color: #cfcfcf; padding: 0 16px; }
+  .controls { display: flex; align-items: center; justify-content: space-around; padding: 14px 24px max(20px, env(safe-area-inset-bottom)); }
+  .shutter { width: 76px; height: 76px; border-radius: 50%; border: 5px solid #fff; background: #fff; box-shadow: inset 0 0 0 4px #111; cursor: pointer; }
+  .shutter:active { transform: scale(.94); }
+  .shutter:disabled { opacity: .35; }
+
+  .result img { width: min(100%, 520px); border-radius: 12px; display: block; margin: 0 auto; }
+  .result .hint { margin-top: 10px; }
+  .btnrow { display: flex; gap: 10px; padding: 16px 16px max(20px, env(safe-area-inset-bottom)); max-width: 560px; width: 100%; margin: 0 auto; }
+  .btn { flex: 1; border: 0; border-radius: 14px; padding: 15px 10px; font: inherit; font-size: 19px; cursor: pointer; }
+  .btn.primary { background: #ffd93b; color: var(--ink); }
+  .btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
+  .scroll { flex: 1; overflow: auto; padding: 8px 16px; }
+  .upload { text-align: center; font-size: 16px; margin-top: 12px; color: #cfcfcf; }
+  .upload.ok { color: #8be08b; } .upload.fail { color: #ff9a9a; }
+  .upload button { margin-left: 6px; background: none; border: 1px solid currentColor; color: inherit; border-radius: 8px; padding: 2px 10px; font: inherit; cursor: pointer; }
+
+  /* ---------- 참가 등록 ---------- */
+  .modal { position: fixed; inset: 0; background: rgba(40,25,15,.55); display: none; place-items: center; padding: 16px; z-index: 20; }
+  .modal.open { display: grid; }
+  .sheet { background: #fffdf6; border-radius: 22px; padding: 22px 20px 18px; width: min(100%, 420px); max-height: 100%; overflow: auto; }
+  .sheet h2 { margin: 0 0 6px; font-weight: 400; font-size: 25px; color: var(--green); }
+  .sheet p { margin: 0 0 14px; line-height: 1.5; }
+  .sheet label.field { display: block; font-size: 17px; margin-bottom: 6px; }
+  .sheet input[type=text] { width: 100%; font: inherit; font-size: 19px; padding: 12px 14px; border: 2px solid #e2d6c8; border-radius: 12px; background: #fff; color: var(--ink); }
+  .sheet input[type=text]:focus { outline: none; border-color: var(--green); }
+  .consent { background: #f3efe6; border-radius: 12px; padding: 12px 14px; margin: 14px 0; font-family: system-ui, sans-serif; font-size: 13.5px; line-height: 1.55; color: #5a4436; }
+  .consent ul { margin: 6px 0 0; padding-left: 18px; }
+  .agree { display: flex; gap: 10px; align-items: center; font-size: 17px; margin-bottom: 14px; cursor: pointer; }
+  .agree input { width: 24px; height: 24px; accent-color: var(--green); }
+  .sheet .btn.primary:disabled { opacity: .45; }
+  .linkbtn { display: block; margin: 12px auto 0; background: none; border: 0; font: inherit; font-size: 15px; color: #8a7a70; text-decoration: underline; cursor: pointer; }
+  .me { text-align: center; font-size: 15px; color: #8a7a70; margin-top: 10px; }
+  .me button { background: none; border: 0; font: inherit; color: inherit; text-decoration: underline; cursor: pointer; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="a">잃어버린</span> <span class="b">반쪽</span><span class="c">을</span> <span class="d">찾아라!!</span></h1>
+  <p class="lead">사진 속 건물의 반쪽과 셀카를 찍어 완성해보세요.</p>
+  <span class="ribbon">덕수궁 곳곳에서 <em>같은 건물</em>을 찾아보세요!</span>
+  <p class="me" id="me" hidden></p>
+</header>
+
+<main id="missions"></main>
+
+<footer>카메라 버튼을 누르면 촬영 화면이 열려요. 완성된 사진은 휴대폰에 저장할 수 있어요.</footer>
+
+<!-- 촬영 화면 -->
+<section class="layer" id="cam" aria-label="촬영">
+  <div class="topbar">
+    <button class="iconbtn" id="camClose" aria-label="닫기">✕</button>
+    <span id="camTitle">미션</span>
+    <button class="iconbtn" id="camFlip" aria-label="전면/후면 카메라 전환">⟲</button>
+  </div>
+  <div class="stage-wrap"><div class="stage" id="camStage"></div></div>
+  <p class="hint">점선에 맞춰 건물의 나머지 반쪽이 이어지도록 찍어보세요!</p>
+  <div class="controls">
+    <button class="iconbtn" id="camAlbum" aria-label="앨범에서 고르기">🖼</button>
+    <button class="shutter" id="camShutter" aria-label="촬영"></button>
+    <span style="width:44px"></span>
+  </div>
+  <input type="file" accept="image/*" capture="environment" id="fileInput" class="sr">
+</section>
+
+<!-- 결과 화면 -->
+<section class="layer result" id="res" aria-label="완성 사진">
+  <div class="topbar">
+    <button class="iconbtn" id="resClose" aria-label="닫기">✕</button>
+    <span>완성! 🎉</span>
+    <span style="width:44px"></span>
+  </div>
+  <div class="scroll">
+    <img id="resImg" alt="완성된 사진">
+    <p class="hint" id="resHint">저장 버튼이 안 되면 사진을 꾹 눌러 저장하세요.</p>
+    <p class="upload" id="upStatus" hidden></p>
+  </div>
+  <div class="btnrow">
+    <button class="btn ghost" id="retake">다시 찍기</button>
+    <button class="btn primary" id="save">사진 저장하기</button>
+  </div>
+</section>
+
+<!-- 참가 등록 -->
+<div class="modal" id="join" role="dialog" aria-modal="true" aria-labelledby="joinTitle">
+  <form class="sheet" id="joinForm">
+    <h2 id="joinTitle">참가 등록</h2>
+    <p>미션을 시작하기 전에 닉네임을 알려주세요!</p>
+    <label class="field" for="nick">닉네임</label>
+    <input type="text" id="nick" maxlength="20" placeholder="예: 덕수궁탐험대" autocomplete="nickname" required>
+    <div class="consent">
+      <b>사진 수집·이용 동의 (참여 기록 저장 시 필요)</b>
+      <ul>
+        <li>수집 항목: 닉네임, 촬영한 미션 사진(얼굴이 포함될 수 있음)</li>
+        <li>이용 목적: 이벤트 참여 확인 및 경품 지급</li>
+        <li>보관 기간: 이벤트 종료 후 30일 이내 파기</li>
+        <li>동의하지 않아도 참여할 수 있으며, 이 경우 사진은 내 휴대폰에만 저장되고 참여 기록은 남지 않아요.</li>
+      </ul>
+    </div>
+    <label class="agree"><input type="checkbox" id="agree"> 위 내용에 동의합니다</label>
+    <button class="btn primary" style="width:100%" id="joinOk" disabled>동의하고 시작하기</button>
+    <button type="button" class="linkbtn" id="joinLocal">동의하지 않고 내 폰에만 저장하기</button>
+  </form>
+</div>
+
+<script src="config.js"></script>
+<script>
+// side: 미리 준비된 반쪽 사진이 놓이는 위치 ('left' | 'right')
+const MISSIONS = [
+  { id: 1, color: 'pink',  img: 'img/mission1.jpg', side: 'left'  },
+  { id: 2, color: 'blue',  img: 'img/mission2.jpg', side: 'right' },
+  { id: 3, color: 'green', img: 'img/mission3.jpg', side: 'left'  },
+];
+const OUT = 1600;            // 완성 이미지 한 변(px)
+const BAND = 120;            // 하단 문구 띠 높이(px)
+
+const CAMERA_SVG = `<svg viewBox="0 0 120 100" aria-hidden="true"><g fill="#bdbdbd">
+  <rect x="10" y="30" width="100" height="64" rx="14"/><rect x="40" y="18" width="40" height="20" rx="6"/></g>
+  <circle cx="60" cy="62" r="20" fill="#fff"/><circle cx="60" cy="62" r="12" fill="#bdbdbd"/>
+  <g stroke="#bdbdbd" stroke-width="5" stroke-linecap="round"><path d="M14 8l8 10M106 8l-8 10M2 26l12 4M118 26l-12 4"/></g></svg>`;
+const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>`;
+
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+};
+
+const $ = (s) => document.querySelector(s);
+const refImgs = {};          // 미션별로 로드된 Image 객체
+let current = null;          // 진행 중인 미션
+let stream = null;
+let facing = 'environment';
+let resultBlob = null;
+
+/* ---------- 미션 카드 ---------- */
+function renderCards() {
+  $('#missions').innerHTML = MISSIONS.map((m) => {
+    const half = `<img class="half" src="${m.img}" alt="미션 ${m.id} 건물의 반쪽">`;
+    const shot = `<button class="shot" data-id="${m.id}" aria-label="미션 ${m.id} 사진 찍기">${CAMERA_SVG}<small>눌러서 촬영</small></button>`;
+    const done = store.get('done' + m.id) === '1';
+    return `<article class="card ${done ? 'is-done' : ''}" data-c="${m.color}" id="card${m.id}">
+      <div class="card-head"><span class="badge">미션 ${m.id}</span><span>어느 건물일까요?</span></div>
+      <div class="frame ${m.side === 'right' ? 'rev' : ''}">${m.side === 'left' ? half + shot : shot + half}</div>
+      <div class="check"><span class="box">${CHECK_SVG}</span><span>사진을 찍었어요!</span></div>
+    </article>`;
+  }).join('');
+  document.querySelectorAll('.shot').forEach((b) => b.addEventListener('click', () => openCamera(+b.dataset.id)));
+}
+
+function loadRef(m) {
+  if (!refImgs[m.id]) {
+    refImgs[m.id] = new Promise((ok, fail) => {
+      const im = new Image();
+      im.onload = () => ok(im); im.onerror = fail; im.src = m.img;
+    });
+  }
+  return refImgs[m.id];
+}
+
+/* ---------- 참가 등록 · 업로드 ---------- */
+const CFG = window.APP_CONFIG || {};
+const ONLINE = !!(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
+let sbPromise = null;
+
+function supabase() {
+  sbPromise ??= import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm')
+    .then(({ createClient }) => createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, { auth: { persistSession: false } }));
+  return sbPromise;
+}
+
+function uuid() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
+    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16));
+}
+
+// mode: 'share'(동의·업로드) | 'local'(폰에만 저장)
+function profile() {
+  const mode = store.get('mode');
+  if (!mode) return null;
+  let pid = store.get('pid');
+  if (!pid) { pid = uuid(); store.set('pid', pid); }
+  return { mode, pid, nickname: store.get('nickname') || '' };
+}
+
+function renderMe() {
+  const p = profile();
+  const me = $('#me');
+  if (!ONLINE || !p) { me.hidden = true; return; }
+  me.hidden = false;
+  me.innerHTML = p.mode === 'share'
+    ? `참가자: <b>${escapeHtml(p.nickname)}</b> · <button id="meEdit">변경</button>`
+    : `내 폰에만 저장하는 중 · <button id="meEdit">참가 등록하기</button>`;
+  $('#meEdit').onclick = () => askJoin();
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+let joinResolve = null;
+function askJoin() {
+  $('#nick').value = store.get('nickname') || '';
+  $('#agree').checked = false;
+  $('#joinOk').disabled = true;
+  $('#join').classList.add('open');
+  return new Promise((ok) => { joinResolve = ok; });
+}
+function finishJoin(mode) {
+  store.set('mode', mode);
+  if (mode === 'share') store.set('nickname', $('#nick').value.trim());
+  $('#join').classList.remove('open');
+  renderMe();
+  joinResolve?.(); joinResolve = null;
+}
+const validJoin = () => { $('#joinOk').disabled = !($('#agree').checked && $('#nick').value.trim()); };
+$('#nick').oninput = validJoin;
+$('#agree').onchange = validJoin;
+$('#joinForm').onsubmit = (e) => { e.preventDefault(); if (!$('#joinOk').disabled) finishJoin('share'); };
+$('#joinLocal').onclick = () => finishJoin('local');
+
+let pendingUpload = null;
+async function upload({ blob, small }, mission) {
+  const p = profile();
+  if (!ONLINE || p?.mode !== 'share') return;
+  const st = $('#upStatus');
+  st.hidden = false; st.className = 'upload'; st.textContent = '참여 기록을 보내는 중…';
+  try {
+    const sb = await supabase();
+    const base = `${p.pid}/m${mission}-${Date.now()}`;
+    const opts = { contentType: 'image/jpeg', upsert: false };
+    const [a, b] = await Promise.all([
+      sb.storage.from('photos').upload(`${base}.jpg`, blob, opts),
+      sb.storage.from('photos').upload(`${base}_s.jpg`, small, opts),
+    ]);
+    if (a.error || b.error) throw a.error || b.error;
+    const { error } = await sb.from('submissions').insert({
+      participant_id: p.pid, nickname: p.nickname, mission,
+      photo_path: `${base}.jpg`, thumb_path: `${base}_s.jpg`,
+    });
+    if (error) throw error;
+    st.className = 'upload ok'; st.textContent = '✓ 참여 기록이 저장됐어요!';
+    pendingUpload = null;
+  } catch (e) {
+    console.error(e);
+    pendingUpload = () => upload({ blob, small }, mission);
+    st.className = 'upload fail';
+    st.innerHTML = '참여 기록 전송에 실패했어요. <button id="upRetry">다시 보내기</button>';
+    $('#upRetry').onclick = () => pendingUpload?.();
+  }
+}
+
+/* ---------- 카메라 ---------- */
+async function openCamera(id) {
+  if (ONLINE && !profile()) await askJoin();
+  current = MISSIONS.find((m) => m.id === id);
+  $('#camTitle').textContent = `미션 ${id}`;
+  const ref = `<img src="${current.img}" alt="">`;
+  const live = `<div id="liveSlot" class="msg">카메라를 켜는 중…</div>`;
+  $('#camStage').innerHTML = (current.side === 'left' ? ref + live : live + ref) + '<div class="seam"></div>';
+  $('#cam').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadRef(current);
+  await startStream();
+}
+
+async function startStream() {
+  stopStream();
+  const slot = $('#liveSlot');
+  $('#camShutter').disabled = true;
+  if (!navigator.mediaDevices?.getUserMedia) return cameraUnavailable();
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: facing }, width: { ideal: 1920 }, height: { ideal: 1920 } }, audio: false,
+    });
+  } catch (e) {
+    return cameraUnavailable();
+  }
+  const v = document.createElement('video');
+  v.id = 'liveSlot'; v.playsInline = true; v.muted = true; v.autoplay = true;
+  v.setAttribute('playsinline', '');
+  if (facing === 'user') v.classList.add('mirror');
+  v.srcObject = stream;
+  slot.replaceWith(v);
+  await v.play().catch(() => {});
+  $('#camShutter').disabled = false;
+}
+
+function cameraUnavailable() {
+  const slot = $('#liveSlot');
+  const msg = document.createElement('div');
+  msg.id = 'liveSlot'; msg.className = 'msg';
+  msg.innerHTML = '이 브라우저에서는 실시간 카메라를 쓸 수 없어요.<br><br>아래 🖼 버튼이나 촬영 버튼을 누르면 휴대폰 카메라가 열려요.';
+  slot.replaceWith(msg);
+  $('#camShutter').disabled = false;
+}
+
+function stopStream() {
+  if (stream) stream.getTracks().forEach((t) => t.stop());
+  stream = null;
+}
+
+function closeCamera() {
+  stopStream();
+  $('#cam').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ---------- 합성 ---------- */
+// 원본(source)에서 세로로 긴 1:2 비율 영역을 가운데 기준으로 잘라낸 좌표
+function coverRect(sw, sh, aspect) {
+  if (sw / sh > aspect) { const w = sh * aspect; return [(sw - w) / 2, 0, w, sh]; }
+  const h = sw / aspect; return [0, (sh - h) / 2, sw, h];
+}
+
+async function compose(source, sw, sh, mirror) {
+  const ref = await loadRef(current);
+  const half = OUT / 2;
+  const c = document.createElement('canvas');
+  c.width = OUT; c.height = OUT + BAND;
+  const g = c.getContext('2d');
+  g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+
+  const refX = current.side === 'left' ? 0 : half;
+  const camX = current.side === 'left' ? half : 0;
+
+  g.imageSmoothingQuality = 'high';
+  g.drawImage(ref, ...coverRect(ref.naturalWidth, ref.naturalHeight, 0.5), refX, 0, half, OUT);
+
+  g.save();
+  if (mirror) { g.translate(camX + half, 0); g.scale(-1, 1); g.drawImage(source, ...coverRect(sw, sh, 0.5), 0, 0, half, OUT); }
+  else g.drawImage(source, ...coverRect(sw, sh, 0.5), camX, 0, half, OUT);
+  g.restore();
+
+  // 하단 문구
+  const colors = { pink: '#ec3f73', blue: '#1f86d0', green: '#2c7a3a' };
+  g.fillStyle = colors[current.color];
+  g.fillRect(0, OUT, OUT, BAND);
+  g.fillStyle = '#fff';
+  g.font = `56px "Jua", sans-serif`;
+  g.textBaseline = 'middle';
+  g.textAlign = 'center';
+  g.fillText(`덕수궁 · 잃어버린 반쪽을 찾아라!! · 미션 ${current.id}`, OUT / 2, OUT + BAND / 2 + 2);
+
+  // 카드에 보여줄 촬영 반쪽 썸네일
+  const t = document.createElement('canvas');
+  t.width = 300; t.height = 600;
+  t.getContext('2d').drawImage(c, camX, 0, half, OUT, 0, 0, 300, 600);
+
+  // 관리자 페이지 목록용 작은 이미지 (전송량 절약)
+  const s = document.createElement('canvas');
+  s.width = 400; s.height = Math.round(400 * c.height / c.width);
+  s.getContext('2d').drawImage(c, 0, 0, s.width, s.height);
+
+  const toJpeg = (cv, q) => new Promise((ok) => cv.toBlob(ok, 'image/jpeg', q));
+  return {
+    blob: await toJpeg(c, 0.88),
+    small: await toJpeg(s, 0.8),
+    thumb: t.toDataURL('image/jpeg', 0.8),
+  };
+}
+
+async function captureLive() {
+  const v = $('#liveSlot');
+  if (!(v instanceof HTMLVideoElement)) return $('#fileInput').click();
+  showResult(await compose(v, v.videoWidth, v.videoHeight, facing === 'user'));
+}
+
+async function captureFile(file) {
+  if (!file) return;
+  const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }).catch(() => null);
+  let src = bmp, w, h;
+  if (bmp) { w = bmp.width; h = bmp.height; }
+  else {
+    src = await new Promise((ok) => { const im = new Image(); im.onload = () => ok(im); im.src = URL.createObjectURL(file); });
+    w = src.naturalWidth; h = src.naturalHeight;
+  }
+  showResult(await compose(src, w, h, false));
+}
+
+/* ---------- 결과 ---------- */
+function showResult(shot) {
+  const { blob, thumb } = shot;
+  resultBlob = blob;
+  $('#upStatus').hidden = true;
+  upload(shot, current.id);
+  stopStream();
+  $('#cam').classList.remove('open');
+  const img = $('#resImg');
+  if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
+  img.src = URL.createObjectURL(blob);
+  $('#res').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  store.set('done' + current.id, '1');
+  const card = $('#card' + current.id);
+  card.classList.add('is-done');
+  card.querySelector('.shot').innerHTML = `<img class="done" src="${thumb}" alt="내가 찍은 반쪽">`;
+}
+
+async function saveResult() {
+  if (!resultBlob) return;
+  const name = `덕수궁_반쪽찾기_미션${current.id}.jpg`;
+  const file = new File([resultBlob], name, { type: 'image/jpeg' });
+  if (navigator.canShare?.({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: '잃어버린 반쪽을 찾아라!!' }); return; }
+    catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(resultBlob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+function closeResult() {
+  $('#res').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ---------- 이벤트 ---------- */
+$('#camClose').onclick = closeCamera;
+$('#camFlip').onclick = () => { facing = facing === 'user' ? 'environment' : 'user'; startStream(); };
+$('#camShutter').onclick = captureLive;
+$('#camAlbum').onclick = () => $('#fileInput').click();
+$('#fileInput').onchange = (e) => { captureFile(e.target.files[0]); e.target.value = ''; };
+$('#resClose').onclick = closeResult;
+$('#retake').onclick = () => { closeResult(); openCamera(current.id); };
+$('#save').onclick = saveResult;
+
+renderCards();
+renderMe();
+</script>
+</body>
+</html>
