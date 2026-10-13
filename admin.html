@@ -2,56 +2,92 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>반쪽찾기 관리자 · KDB생명보험지부</title>
+<title>관리자 · 덕수궁 잃어버린 반쪽을 찾아라</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<script>
+// 새 버전 자동 반영 (index.html 과 같은 version.json 사용)
+const APP_VERSION = '8';
+fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
+  const u = new URL(location.href);
+  if (v !== APP_VERSION && u.searchParams.get('v') !== v) { u.searchParams.set('v', v); location.replace(u); }
+}).catch(() => {});
+</script>
 <style>
-  :root { --ink: #3b2a20; --line: #e8e1d6; --bg: #faf8f4; --green: #2c7a3a; --muted: #8a7a70; }
-  * { box-sizing: border-box; }
-  body { margin: 0; font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color: var(--ink); background: var(--bg); }
-  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; border-bottom: 1px solid var(--line); background: #fff; flex-wrap: wrap; }
-  h1 { margin: 0; font-size: 19px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 16px; }
-  button, input { font: inherit; }
-  .btn { border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 14px; cursor: pointer; }
-  .btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
-  .login { max-width: 360px; margin: 60px auto; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
-  .login h2 { margin: 0 0 16px; font-size: 18px; }
-  .login label { display: block; font-size: 14px; margin: 10px 0 4px; }
-  .login input { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
-  .login .btn { width: 100%; margin-top: 16px; padding: 11px; }
-  .err { color: #c0392b; font-size: 14px; min-height: 20px; margin-top: 10px; }
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
-  .stat { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
-  .stat b { display: block; font-size: 26px; font-variant-numeric: tabular-nums; }
-  .stat span { font-size: 13px; color: var(--muted); }
-  .tools { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
-  .tools input { flex: 1; min-width: 160px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; }
-  .wrap { overflow-x: auto; background: #fff; border: 1px solid var(--line); border-radius: 14px; }
-  table { border-collapse: collapse; width: 100%; min-width: 640px; }
-  th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; font-size: 14px; }
-  th { font-size: 13px; color: var(--muted); font-weight: 600; background: #fdfcfa; }
-  tr:last-child td { border-bottom: 0; }
-  td.ph { width: 120px; }
-  td.ph img { width: 96px; height: auto; border-radius: 6px; display: block; cursor: zoom-in; }
-  td.ph .none { color: #c9c0b5; font-size: 13px; }
-  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 13px; background: #eee; }
-  .pill.ok { background: #dff3e2; color: var(--green); }
-  .nick { font-weight: 600; }
-  .sub { font-size: 12px; color: var(--muted); }
-  .empty { padding: 40px; text-align: center; color: var(--muted); }
-  .btn.sm { padding: 6px 12px; font-size: 13px; white-space: nowrap; }
+  :root { --bg: #f5f2ec; --ink: #1d2622; --ink-2: #5b6661; --ink-3: #98a19c; --line: #e7e2d8; --brand: #1f5d43; --brand-soft: #e5efe9; --danger: #c2413b;
+          --shadow: 0 1px 2px rgba(29,38,34,.04), 0 8px 24px -12px rgba(29,38,34,.18); }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; font-family: "Pretendard Variable", Pretendard, -apple-system, system-ui, sans-serif; color: var(--ink); background: var(--bg); letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; }
+  button, input { font: inherit; color: inherit; }
+  header { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: max(12px, env(safe-area-inset-top)) 16px 12px; background: rgba(245,242,236,.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  header h1 { margin: 0; font-size: 16px; font-weight: 800; }
+  header h1 small { display: block; font-size: 12px; font-weight: 600; color: var(--ink-3); }
+  main { max-width: 760px; margin: 0 auto; padding: 16px 16px 40px; }
+
+  .btn { border: 1px solid var(--line); background: #fff; border-radius: 12px; padding: 10px 14px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
   .btn:disabled { opacity: .5; cursor: default; }
-  dialog { border: 0; border-radius: 14px; padding: 0; max-width: min(92vw, 720px); }
-  dialog img { display: block; width: 100%; height: auto; }
-  dialog .bar { display: flex; justify-content: space-between; gap: 8px; padding: 10px; }
-  dialog::backdrop { background: rgba(0,0,0,.6); }
+  .btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .btn.danger { color: var(--danger); border-color: #f0d3d1; background: #fff; }
+  .btn.sm { padding: 7px 11px; font-size: 13px; border-radius: 10px; }
+
+  .login { max-width: 380px; margin: 56px auto; background: #fff; border-radius: 20px; padding: 26px 22px; box-shadow: var(--shadow); }
+  .login h2 { margin: 0 0 18px; font-size: 20px; font-weight: 800; }
+  .login label { display: block; font-size: 13px; font-weight: 700; color: var(--ink-2); margin: 12px 0 6px; }
+  .login input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #faf9f6; font-size: 16px; }
+  .login .btn { width: 100%; margin-top: 18px; padding: 13px; font-size: 16px; }
+  .err { color: var(--danger); font-size: 14px; min-height: 20px; margin-top: 10px; }
+
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+  @media (min-width: 640px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+  .stat { background: #fff; border-radius: 16px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .stat b { display: block; font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 12.5px; color: var(--ink-2); }
+
+  .tools { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .tools input { flex: 1 1 100%; padding: 11px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; font-size: 15px; }
+  @media (min-width: 640px) { .tools input { flex: 1 1 200px; } }
+  .tools .btn { flex: 1 1 auto; }
+  .updated { font-size: 12px; color: var(--ink-3); margin: 0 0 14px; }
+
+  .list { display: grid; gap: 12px; }
+  .team { background: #fff; border-radius: 18px; padding: 14px; box-shadow: var(--shadow); }
+  .team-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .team-head .name { font-size: 17px; font-weight: 800; }
+  .team-head .meta { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+  .pill { font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: #f1efe9; color: var(--ink-2); white-space: nowrap; }
+  .pill.ok { background: var(--brand-soft); color: var(--brand); }
+  .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .th { position: relative; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; background: #f3f1ec; border: 0; padding: 0; cursor: zoom-in; }
+  .th img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .th .lb { position: absolute; left: 6px; top: 6px; background: rgba(20,24,22,.66); color: #fff; font-size: 11px; font-weight: 700; padding: 3px 7px; border-radius: 999px; }
+  .th.none { display: grid; place-items: center; color: var(--ink-3); font-size: 12px; cursor: default; }
+  .team-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .team-actions .btn:first-child { flex: 1; }
+  .empty { padding: 48px 16px; text-align: center; color: var(--ink-3); background: #fff; border-radius: 18px; }
+
+  /* 시트(모달) */
+  .sheet-wrap { position: fixed; inset: 0; z-index: 20; background: rgba(15,18,17,.55); display: none; align-items: flex-end; justify-content: center; }
+  .sheet-wrap.open { display: flex; }
+  @media (min-width: 640px) { .sheet-wrap { align-items: center; } .sheet { border-radius: 22px !important; } }
+  .sheet { background: #fff; width: min(100%, 560px); max-height: 94vh; overflow: auto; border-radius: 22px 22px 0 0; padding: 18px 16px max(18px, env(safe-area-inset-bottom)); }
+  .sheet h3 { margin: 2px 0 6px; font-size: 18px; font-weight: 800; }
+  .sheet p { margin: 0 0 14px; font-size: 14px; color: var(--ink-2); line-height: 1.6; word-break: keep-all; }
+  .sheet .view { width: 100%; border-radius: 12px; display: block; margin-bottom: 12px; background: #f3f1ec; min-height: 200px; }
+  .sheet .row { display: flex; gap: 8px; }
+  .sheet .row .btn { flex: 1; padding: 13px; font-size: 15px; }
+  .batches { display: grid; gap: 8px; margin-bottom: 10px; }
+  .batches .btn { padding: 13px; font-size: 15px; }
+  .batches .btn.done { background: var(--brand-soft); border-color: var(--brand-soft); color: var(--brand); }
+
+  .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px); opacity: 0; z-index: 30; background: var(--ink); color: #fff; font-size: 14px; font-weight: 600; padding: 12px 18px; border-radius: 999px; transition: .25s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
 </style>
 </head>
 <body>
 <header>
-  <h1>덕수궁 잃어버린 반쪽을 찾아라 · 관리자</h1>
-  <div id="who" hidden><span id="whoEmail" class="sub"></span> <button class="btn" id="logout">로그아웃</button></div>
+  <h1>관리자<small>덕수궁 잃어버린 반쪽을 찾아라</small></h1>
+  <button class="btn sm" id="logout" hidden>로그아웃</button>
 </header>
 
 <main>
@@ -69,31 +105,47 @@
     <div class="stats">
       <div class="stat"><b id="sPeople">0</b><span>참가 조(기기)</span></div>
       <div class="stat"><b id="sDone">0</b><span>3장 모두 전송</span></div>
-      <div class="stat"><b id="sM1">0</b><span>미션 1 완료</span></div>
-      <div class="stat"><b id="sM2">0</b><span>미션 2 완료</span></div>
-      <div class="stat"><b id="sM3">0</b><span>미션 3 완료</span></div>
+      <div class="stat"><b id="sPhotos">0</b><span>받은 사진</span></div>
+      <div class="stat"><b id="sLast">-</b><span>마지막 전송</span></div>
     </div>
     <div class="tools">
       <input type="search" id="q" placeholder="조 이름 검색">
       <button class="btn" id="reload">새로고침</button>
-      <button class="btn primary" id="dlAll">전체 받기 (ZIP)</button>
-      <span class="sub" id="updated"></span>
+      <button class="btn primary" id="saveAll">전체 사진 저장</button>
+      <button class="btn danger" id="delAll">전체 삭제</button>
     </div>
-    <div class="wrap"><table>
-      <thead><tr><th>조</th><th>미션 1</th><th>미션 2</th><th>미션 3</th><th>상태</th><th>마지막 참여</th><th>다운로드</th></tr></thead>
-      <tbody id="rows"></tbody>
-    </table></div>
+    <p class="updated" id="updated"></p>
+    <div class="list" id="list"></div>
   </section>
 
   <p class="empty" id="noConfig" hidden>config.js 에 Supabase 연결 정보가 없습니다.</p>
 </main>
 
-<dialog id="viewer">
-  <img id="viewImg" alt="">
-  <div class="bar"><a class="btn" id="viewDl" download>원본 다운로드</a><button class="btn" id="viewClose">닫기</button></div>
-</dialog>
+<!-- 사진 크게 보기 -->
+<div class="sheet-wrap" id="viewer">
+  <div class="sheet">
+    <h3 id="viewTitle"></h3>
+    <img class="view" id="viewImg" alt="">
+    <div class="row">
+      <button class="btn" id="viewClose">닫기</button>
+      <button class="btn primary" id="viewSave" disabled>불러오는 중…</button>
+    </div>
+  </div>
+</div>
 
-<script src="config.js?v=7"></script>
+<!-- 여러 장 저장 -->
+<div class="sheet-wrap" id="saver">
+  <div class="sheet">
+    <h3 id="saverTitle">사진 저장</h3>
+    <p id="saverMsg"></p>
+    <div class="batches" id="batches"></div>
+    <div class="row"><button class="btn" id="saverClose">닫기</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js?v=8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
@@ -101,6 +153,9 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const CFG = window.APP_CONFIG || {};
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const safe = (s) => String(s).replace(/[\\/:*?"<>|]/g, '_').trim() || '이름없음';
+const fmt = (d) => new Date(d).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+const BATCH = 20;   // 휴대폰 공유 메뉴로 한 번에 넘길 사진 수
 
 if (!CFG.SUPABASE_URL || !CFG.SUPABASE_ANON_KEY) {
   $('#noConfig').hidden = false;
@@ -109,14 +164,26 @@ if (!CFG.SUPABASE_URL || !CFG.SUPABASE_ANON_KEY) {
 const sb = createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
 let people = [];
 
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// 휴대폰(공유 메뉴로 사진첩 저장 가능)인지
+const canShareFiles = (() => {
+  try { return !!navigator.canShare?.({ files: [new File([''], 'a.jpg', { type: 'image/jpeg' })] }); }
+  catch { return false; }
+})();
+
+/* ---------- 로그인 ---------- */
 async function showSession() {
   const { data: { session } } = await sb.auth.getSession();
   $('#loginForm').hidden = !!session;
   $('#board').hidden = !session;
-  $('#who').hidden = !session;
-  if (session) { $('#whoEmail').textContent = session.user.email; load(); }
+  $('#logout').hidden = !session;
+  if (session) load();
 }
-
 $('#loginForm').onsubmit = async (e) => {
   e.preventDefault();
   $('#loginErr').textContent = '';
@@ -126,26 +193,25 @@ $('#loginForm').onsubmit = async (e) => {
   showSession();
 };
 $('#logout').onclick = async () => { await sb.auth.signOut(); showSession(); };
-$('#reload').onclick = () => load();
-$('#q').oninput = () => render();
 
+/* ---------- 목록 ---------- */
 async function load() {
-  $('#rows').innerHTML = '<tr><td colspan="7" class="empty">불러오는 중…</td></tr>';
+  $('#list').innerHTML = '<div class="empty">불러오는 중…</div>';
   const { data, error } = await sb.from('submissions').select('*').order('created_at', { ascending: true });
-  if (error) { $('#rows').innerHTML = `<tr><td colspan="7" class="empty">불러오기 실패: ${esc(error.message)}</td></tr>`; return; }
+  if (error) { $('#list').innerHTML = `<div class="empty">불러오기 실패: ${esc(error.message)}</div>`; return; }
 
-  // 참가자별로 묶고, 미션마다 가장 최근 사진만 사용
+  // 기기(참가 조)별로 묶음. 미션마다 가장 최근 사진을 보여주고, 삭제용으로 전체 기록도 보관
   const map = new Map();
   for (const r of data) {
-    const p = map.get(r.participant_id) || { pid: r.participant_id, nickname: r.nickname, missions: {}, last: r.created_at };
+    const p = map.get(r.participant_id) || { pid: r.participant_id, nickname: r.nickname, missions: {}, rows: [], last: r.created_at };
     p.nickname = r.nickname;
     p.missions[r.mission] = r;
+    p.rows.push(r);
     p.last = r.created_at;
     map.set(r.participant_id, p);
   }
   people = [...map.values()].sort((a, b) => b.last.localeCompare(a.last));
 
-  // 목록용 작은 사진 서명 URL (1시간 유효)
   const paths = people.flatMap((p) => Object.values(p.missions).map((r) => r.thumb_path));
   const urls = {};
   for (let i = 0; i < paths.length; i += 100) {
@@ -154,103 +220,217 @@ async function load() {
   }
   people.forEach((p) => Object.values(p.missions).forEach((r) => { r.thumbUrl = urls[r.thumb_path]; }));
 
-  const count = (fn) => people.filter(fn).length;
   $('#sPeople').textContent = people.length;
-  $('#sDone').textContent = count((p) => [1, 2, 3].every((m) => p.missions[m]));
-  [1, 2, 3].forEach((m) => { $('#sM' + m).textContent = count((p) => p.missions[m]); });
-  $('#updated').textContent = '업데이트 ' + new Date().toLocaleTimeString('ko-KR');
+  $('#sDone').textContent = people.filter((p) => [1, 2, 3].every((m) => p.missions[m])).length;
+  $('#sPhotos').textContent = people.reduce((n, p) => n + Object.keys(p.missions).length, 0);
+  $('#sLast').textContent = people[0] ? fmt(people[0].last).replace(/^\d+\. \d+\. /, '') : '-';
+  $('#updated').textContent = `업데이트 ${new Date().toLocaleTimeString('ko-KR')} · 사진을 누르면 크게 보고 저장할 수 있어요`;
   render();
 }
 
 function render() {
   const q = $('#q').value.trim().toLowerCase();
   const list = people.filter((p) => !q || p.nickname.toLowerCase().includes(q));
-  if (!list.length) { $('#rows').innerHTML = '<tr><td colspan="7" class="empty">아직 참여 기록이 없어요.</td></tr>'; return; }
-  $('#rows').innerHTML = list.map((p) => {
-    const cells = [1, 2, 3].map((m) => {
-      const r = p.missions[m];
-      if (!r) return '<td class="ph"><span class="none">—</span></td>';
-      return `<td class="ph"><img src="${esc(r.thumbUrl || '')}" alt="미션 ${m}" data-path="${esc(r.photo_path)}" data-name="${esc(p.nickname)}_미션${m}.jpg" loading="lazy"></td>`;
-    }).join('');
+  if (!list.length) { $('#list').innerHTML = `<div class="empty">${people.length ? '검색 결과가 없어요.' : '아직 참여 기록이 없어요.'}</div>`; return; }
+  $('#list').innerHTML = list.map((p) => {
     const n = Object.keys(p.missions).length;
-    const t = new Date(p.last).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-    return `<tr><td><div class="nick">${esc(p.nickname)}</div><div class="sub">${esc(p.pid.slice(0, 8))}</div></td>${cells}
-      <td><span class="pill ${n === 3 ? 'ok' : ''}">${n === 3 ? '완료 🎉' : n + ' / 3'}</span></td><td class="sub">${t}</td>
-      <td><button class="btn sm" data-dl="${esc(p.pid)}">${n}장 받기</button></td></tr>`;
+    const thumbs = [1, 2, 3].map((m) => {
+      const r = p.missions[m];
+      if (!r) return `<div class="th none">미션 ${m} 없음</div>`;
+      return `<button class="th" data-view="${esc(p.pid)}" data-m="${m}"><img src="${esc(r.thumbUrl || '')}" alt="${esc(p.nickname)} 미션 ${m}" loading="lazy"><span class="lb">미션 ${m}</span></button>`;
+    }).join('');
+    return `<article class="team">
+      <div class="team-head">
+        <div><div class="name">${esc(p.nickname)}</div><div class="meta">${fmt(p.last)} · 기기 ${esc(p.pid.slice(0, 4))}</div></div>
+        <span class="pill ${n === 3 ? 'ok' : ''}">${n === 3 ? '완료' : n + ' / 3'}</span>
+      </div>
+      <div class="thumbs">${thumbs}</div>
+      <div class="team-actions">
+        <button class="btn sm" data-save="${esc(p.pid)}">${n}장 ${canShareFiles ? '사진첩에 저장' : '다운로드'}</button>
+        <button class="btn sm danger" data-del="${esc(p.pid)}">삭제</button>
+      </div>
+    </article>`;
   }).join('');
 }
 
-/* ---------- ZIP 다운로드 ---------- */
-const safe = (s) => String(s).replace(/[\\/:*?"<>|]/g, '_').trim() || '이름없음';
+$('#reload').onclick = () => load();
+$('#q').oninput = () => render();
 
-async function addPerson(zip, p, folder) {
-  for (const m of [1, 2, 3]) {
-    const r = p.missions[m];
-    if (!r) continue;
-    const { data, error } = await sb.storage.from('photos').download(r.photo_path);
-    if (error) throw error;
-    zip.file(`${folder}${safe(p.nickname)}_미션${m}.jpg`, data);
-  }
+/* ---------- 사진 가져오기 ---------- */
+// 파일 이름에 조 이름·미션 번호를 넣음 (예: 3조_미션1.jpg)
+function fileName(p, m, dupe) {
+  return `${safe(p.nickname)}${dupe ? '_' + p.pid.slice(0, 4) : ''}_미션${m}.jpg`;
 }
 
-async function saveZip(zip, name) {
-  const blob = await zip.generateAsync({ type: 'blob' });
+async function fetchFile(p, m, dupe = false) {
+  const { data, error } = await sb.storage.from('photos').download(p.missions[m].photo_path);
+  if (error) throw error;
+  return new File([data], fileName(p, m, dupe), { type: 'image/jpeg' });
+}
+
+async function collect(ps, onProgress) {
+  const names = {};
+  ps.forEach((p) => { names[p.nickname] = (names[p.nickname] || 0) + 1; });
+  const files = [];
+  const total = ps.reduce((n, p) => n + Object.keys(p.missions).length, 0);
+  for (const p of ps) {
+    for (const m of [1, 2, 3]) {
+      if (!p.missions[m]) continue;
+      files.push(await fetchFile(p, m, names[p.nickname] > 1));
+      onProgress?.(files.length, total);
+    }
+  }
+  return files;
+}
+
+function downloadFile(f) {
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = name;
+  a.href = URL.createObjectURL(f); a.download = f.name;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 10000);
 }
 
-async function withBusy(btn, label, fn) {
+// 휴대폰: 공유 메뉴 → "이미지 저장"으로 사진첩에 저장
+// (공유 메뉴는 버튼을 누른 직후에만 열 수 있어서, 사진을 먼저 받아두고 저장 버튼을 따로 띄움)
+function openSaver(title, files) {
+  $('#saverTitle').textContent = title;
+  $('#saverMsg').innerHTML = canShareFiles
+    ? `사진 ${files.length}장이 준비됐어요. 아래 버튼을 누르고 공유 메뉴에서 <b>“이미지 ${files.length > 1 ? files.length + '개 ' : ''}저장”</b>을 선택하세요.`
+    : `사진 ${files.length}장이 준비됐어요.`;
+  const groups = [];
+  for (let i = 0; i < files.length; i += BATCH) groups.push(files.slice(i, i + BATCH));
+  $('#batches').innerHTML = groups.map((g, i) => `<button class="btn primary" data-b="${i}">${
+    groups.length > 1 ? `${i * BATCH + 1}~${i * BATCH + g.length}번째 ` : ''}${canShareFiles ? '사진첩에 저장' : '다운로드'} (${g.length}장)</button>`).join('');
+  $('#batches').querySelectorAll('[data-b]').forEach((b) => {
+    b.onclick = async () => {
+      const g = groups[+b.dataset.b];
+      if (canShareFiles) {
+        try { await navigator.share({ files: g }); }
+        catch (e) { if (e.name !== 'AbortError') toast('저장하지 못했어요. 다시 눌러 주세요.'); return; }
+      } else {
+        g.forEach(downloadFile);
+      }
+      b.classList.add('done'); b.textContent = '✓ ' + b.textContent;
+    };
+  });
+  $('#saver').classList.add('open');
+}
+$('#saverClose').onclick = () => $('#saver').classList.remove('open');
+
+async function busy(btn, fn) {
   const old = btn.textContent;
-  btn.disabled = true; btn.textContent = label;
-  try { await fn(); }
-  catch (e) { console.error(e); alert('다운로드에 실패했어요. 잠시 후 다시 시도해 주세요.'); }
+  btn.disabled = true;
+  try { await fn((t) => { btn.textContent = t; }); }
+  catch (e) { console.error(e); alert('작업에 실패했어요. 잠시 후 다시 시도해 주세요.'); }
   finally { btn.disabled = false; btn.textContent = old; }
 }
 
-// 한 조의 사진(최대 3장)을 ZIP 하나로
-async function downloadPerson(pid, btn) {
+// 조별 저장
+async function savePerson(pid, btn) {
   const p = people.find((x) => x.pid === pid);
   if (!p) return;
-  await withBusy(btn, '준비 중…', async () => {
-    const zip = new JSZip();
-    await addPerson(zip, p, '');
-    await saveZip(zip, `${safe(p.nickname)}_반쪽찾기.zip`);
+  await busy(btn, async (label) => {
+    label('준비 중…');
+    const files = await collect([p]);
+    openSaver(`${p.nickname} 사진 저장`, files);
   });
 }
 
-// 모든 조 사진을 조별 폴더로 묶어 ZIP 하나로
-$('#dlAll').onclick = () => withBusy($('#dlAll'), '준비 중…', async () => {
-  if (!people.length) { alert('받을 사진이 없어요.'); return; }
+// 전체 저장 (PC는 조별 폴더로 묶은 ZIP 하나)
+$('#saveAll').onclick = () => busy($('#saveAll'), async (label) => {
+  if (!people.length) { alert('저장할 사진이 없어요.'); return; }
+  const files = await collect(people, (i, n) => label(`준비 중… (${i}/${n})`));
+  if (canShareFiles) { openSaver('전체 사진 저장', files); return; }
+  label('압축 중…');
   const zip = new JSZip();
-  const used = new Set();
-  let i = 0;
-  for (const p of people) {
-    i++;
-    $('#dlAll').textContent = `준비 중… (${i}/${people.length})`;
-    let folder = safe(p.nickname);
-    if (used.has(folder)) folder += `_${p.pid.slice(0, 4)}`;   // 같은 조가 여러 기기로 보낸 경우
-    used.add(folder);
-    await addPerson(zip, p, folder + '/');
-  }
-  await saveZip(zip, `임시대의원대회1부_반쪽찾기_전체.zip`);
+  files.forEach((f) => zip.file(`${f.name.replace(/_미션\d\.jpg$/, '')}/${f.name}`, f));
+  downloadFile(new File([await zip.generateAsync({ type: 'blob' })], '덕수궁_반쪽찾기_전체.zip'));
 });
 
-// 사진 클릭 → 원본 보기 / 다운로드 버튼
-$('#rows').onclick = async (e) => {
-  const dl = e.target.closest('button[data-dl]');
-  if (dl) return downloadPerson(dl.dataset.dl, dl);
-  const img = e.target.closest('img[data-path]');
-  if (!img) return;
-  const { data } = await sb.storage.from('photos').createSignedUrl(img.dataset.path, 3600, { download: img.dataset.name });
-  const { data: view } = await sb.storage.from('photos').createSignedUrl(img.dataset.path, 3600);
-  if (!view) return;
-  $('#viewImg').src = view.signedUrl;
-  $('#viewDl').href = data?.signedUrl || view.signedUrl;
-  $('#viewer').showModal();
+/* ---------- 크게 보기 ---------- */
+let viewFile = null;
+async function openViewer(pid, m) {
+  const p = people.find((x) => x.pid === pid);
+  if (!p) return;
+  viewFile = null;
+  $('#viewTitle').textContent = `${p.nickname} · 미션 ${m}`;
+  $('#viewImg').src = p.missions[m].thumbUrl || '';
+  $('#viewSave').disabled = true; $('#viewSave').textContent = '불러오는 중…';
+  $('#viewer').classList.add('open');
+  try {
+    const f = await fetchFile(p, m);
+    viewFile = f;
+    $('#viewImg').src = URL.createObjectURL(f);
+    $('#viewSave').disabled = false;
+    $('#viewSave').textContent = canShareFiles ? '사진첩에 저장' : '다운로드';
+  } catch (e) {
+    console.error(e);
+    $('#viewSave').textContent = '불러오기 실패';
+  }
+}
+$('#viewSave').onclick = async () => {
+  if (!viewFile) return;
+  if (canShareFiles) {
+    try { await navigator.share({ files: [viewFile] }); }
+    catch (e) { if (e.name !== 'AbortError') toast('저장하지 못했어요. 다시 눌러 주세요.'); }
+  } else downloadFile(viewFile);
 };
-$('#viewClose').onclick = () => $('#viewer').close();
+$('#viewClose').onclick = () => $('#viewer').classList.remove('open');
+
+/* ---------- 삭제 ---------- */
+async function removePaths(paths) {
+  for (let i = 0; i < paths.length; i += 100) {
+    const { error } = await sb.storage.from('photos').remove(paths.slice(i, i + 100));
+    if (error) throw error;
+  }
+}
+
+async function deletePerson(pid, btn) {
+  const p = people.find((x) => x.pid === pid);
+  if (!p) return;
+  if (!confirm(`'${p.nickname}'의 기록과 사진을 모두 삭제할까요?\n삭제하면 되돌릴 수 없어요.`)) return;
+  await busy(btn, async (label) => {
+    label('삭제 중…');
+    await removePaths(p.rows.flatMap((r) => [r.photo_path, r.thumb_path]));
+    const { error } = await sb.from('submissions').delete().eq('participant_id', pid);
+    if (error) throw error;
+    toast(`'${p.nickname}' 삭제 완료`);
+    await load();
+  });
+}
+
+// 전체 삭제: 저장소의 모든 사진(전송 중 끊겨 기록 없이 남은 파일 포함)과 모든 기록
+$('#delAll').onclick = () => {
+  const typed = prompt('모든 조의 기록과 사진을 삭제합니다. 되돌릴 수 없어요.\n계속하려면 "전체삭제"를 입력하세요.');
+  if (typed === null) return;
+  if (typed.replace(/\s/g, '') !== '전체삭제') { alert('입력이 맞지 않아 취소했어요.'); return; }
+  busy($('#delAll'), async (label) => {
+    label('삭제 중…');
+    const { data: folders, error: e1 } = await sb.storage.from('photos').list('', { limit: 1000 });
+    if (e1) throw e1;
+    const paths = [];
+    for (const f of folders || []) {
+      const { data: files, error: e2 } = await sb.storage.from('photos').list(f.name, { limit: 1000 });
+      if (e2) throw e2;
+      (files || []).forEach((x) => paths.push(`${f.name}/${x.name}`));
+    }
+    await removePaths(paths);
+    const { error } = await sb.from('submissions').delete().gt('id', 0);
+    if (error) throw error;
+    toast('전체 삭제 완료');
+    await load();
+  });
+};
+
+/* ---------- 목록 클릭 ---------- */
+$('#list').onclick = (e) => {
+  const v = e.target.closest('[data-view]');
+  if (v) return openViewer(v.dataset.view, +v.dataset.m);
+  const s = e.target.closest('[data-save]');
+  if (s) return savePerson(s.dataset.save, s);
+  const d = e.target.closest('[data-del]');
+  if (d) return deletePerson(d.dataset.del, d);
+};
 
 showSession();
 </script>

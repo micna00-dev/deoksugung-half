@@ -17,7 +17,7 @@ if (new URLSearchParams(location.search).has('reset')) {
 }
 
 // 새 버전 자동 반영: 배포할 때 APP_VERSION 과 version.json 의 v 를 같이 올릴 것
-const APP_VERSION = '7';
+const APP_VERSION = '8';
 fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
   const u = new URL(location.href);
   if (v !== APP_VERSION && u.searchParams.get('v') !== v) {
@@ -356,7 +356,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   </form>
 </div>
 
-<script src="config.js?v=7"></script>
+<script src="config.js?v=8"></script>
 <script>
 // side: 미리 준비된 반쪽 사진이 놓이는 위치 ('left' | 'right')
 const MISSIONS = [
