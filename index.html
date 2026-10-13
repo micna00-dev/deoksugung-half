@@ -91,6 +91,25 @@
   .upload.ok { color: #8be08b; } .upload.fail { color: #ff9a9a; }
   .upload button { margin-left: 6px; background: none; border: 1px solid currentColor; color: inherit; border-radius: 8px; padding: 2px 10px; font: inherit; cursor: pointer; }
 
+  .btn:disabled { opacity: .5; }
+  .sending { position: absolute; inset: 0; background: rgba(17,17,17,.82); display: grid; place-content: center; justify-items: center; gap: 18px; text-align: center; font-size: 20px; line-height: 1.5; }
+  .sending[hidden] { display: none; }
+  .sending small { font-size: 15px; color: #bbb; }
+  .spinner { width: 54px; height: 54px; border-radius: 50%; border: 5px solid rgba(255,255,255,.2); border-top-color: #ffd93b; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .done-screen { background: linear-gradient(#cfeefc, #fffdf6); color: var(--ink); }
+  .done-body { flex: 1; display: grid; place-content: center; justify-items: center; text-align: center; padding: 24px 20px; }
+  .big-check { width: 110px; height: 110px; border-radius: 50%; background: var(--green); color: #fff; display: grid; place-items: center; animation: pop .45s cubic-bezier(.2,1.6,.4,1); }
+  .big-check svg { width: 62px; }
+  @keyframes pop { from { transform: scale(.3); opacity: 0; } }
+  .done-body h2 { font-weight: 400; font-size: 34px; margin: 22px 0 8px; color: var(--green); }
+  .done-body p { font-size: 19px; line-height: 1.55; margin: 0 0 22px; word-break: keep-all; }
+  .dots { display: flex; gap: 12px; }
+  .dots span { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-size: 17px; border: 3px solid #ddd; color: #aaa; background: #fff; }
+  .dots span.on { border-color: var(--green); background: var(--green); color: #fff; }
+  .done-screen .btn.primary { background: var(--green); color: #fff; }
+
   /* ---------- 참가 등록 ---------- */
   .modal { position: fixed; inset: 0; background: rgba(40,25,15,.55); display: none; place-items: center; padding: 16px; z-index: 20; }
   .modal.open { display: grid; }
@@ -122,7 +141,7 @@
 
 <main id="missions"></main>
 
-<footer>카메라 버튼을 누르면 촬영 화면이 열려요. 완성된 사진은 휴대폰에 저장할 수 있어요.</footer>
+<footer>카메라 칸을 눌러 촬영하고, 제출하면 미션 완료!</footer>
 
 <!-- 촬영 화면 -->
 <section class="layer" id="cam" aria-label="촬영">
@@ -142,20 +161,37 @@
 </section>
 
 <!-- 결과 화면 -->
-<section class="layer result" id="res" aria-label="완성 사진">
+<section class="layer result" id="res" aria-label="사진 확인">
   <div class="topbar">
-    <button class="iconbtn" id="resClose" aria-label="닫기">✕</button>
-    <span>완성! 🎉</span>
+    <button class="iconbtn" id="resClose" aria-label="취소">✕</button>
+    <span id="resTitle">미션</span>
     <span style="width:44px"></span>
   </div>
   <div class="scroll">
     <img id="resImg" alt="완성된 사진">
-    <p class="hint" id="resHint">저장 버튼이 안 되면 사진을 꾹 눌러 저장하세요.</p>
-    <p class="upload" id="upStatus" hidden></p>
+    <p class="hint" id="resHint">건물이 잘 이어졌나요? 마음에 들면 제출해 주세요!</p>
+    <p class="upload fail" id="upStatus" hidden></p>
   </div>
   <div class="btnrow">
     <button class="btn ghost" id="retake">다시 찍기</button>
-    <button class="btn primary" id="save">사진 저장하기</button>
+    <button class="btn primary" id="submit">제출하기</button>
+  </div>
+  <div class="sending" id="sending" hidden>
+    <div class="spinner" aria-hidden="true"></div>
+    <p>사진을 보내는 중이에요…<br><small>잠시만 기다려 주세요</small></p>
+  </div>
+</section>
+
+<!-- 완료 화면 -->
+<section class="layer done-screen" id="doneLayer" aria-label="미션 완료">
+  <div class="done-body">
+    <div class="big-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
+    <h2 id="doneTitle">미션 완료!</h2>
+    <p id="doneMsg"></p>
+    <div class="dots" id="doneDots"></div>
+  </div>
+  <div class="btnrow">
+    <button class="btn primary" id="doneOk">확인</button>
   </div>
 </section>
 
@@ -297,36 +333,25 @@ $('#agree').onchange = validJoin;
 $('#joinForm').onsubmit = (e) => { e.preventDefault(); if (!$('#joinOk').disabled) finishJoin('share'); };
 $('#joinLocal').onclick = () => finishJoin('local');
 
-let pendingUpload = null;
+// 서버로 사진과 참여 기록 전송 (실패 시 예외)
 async function upload({ blob, small }, mission) {
   const p = profile();
-  if (!ONLINE || p?.mode !== 'share') return;
-  const st = $('#upStatus');
-  st.hidden = false; st.className = 'upload'; st.textContent = '참여 기록을 보내는 중…';
-  try {
-    const sb = await supabase();
-    const base = `${p.pid}/m${mission}-${Date.now()}`;
-    const opts = { contentType: 'image/jpeg', upsert: false };
-    const [a, b] = await Promise.all([
-      sb.storage.from('photos').upload(`${base}.jpg`, blob, opts),
-      sb.storage.from('photos').upload(`${base}_s.jpg`, small, opts),
-    ]);
-    if (a.error || b.error) throw a.error || b.error;
-    const { error } = await sb.from('submissions').insert({
-      participant_id: p.pid, nickname: p.nickname, mission,
-      photo_path: `${base}.jpg`, thumb_path: `${base}_s.jpg`,
-    });
-    if (error) throw error;
-    st.className = 'upload ok'; st.textContent = '✓ 참여 기록이 저장됐어요!';
-    pendingUpload = null;
-  } catch (e) {
-    console.error(e);
-    pendingUpload = () => upload({ blob, small }, mission);
-    st.className = 'upload fail';
-    st.innerHTML = '참여 기록 전송에 실패했어요. <button id="upRetry">다시 보내기</button>';
-    $('#upRetry').onclick = () => pendingUpload?.();
-  }
+  const sb = await supabase();
+  const base = `${p.pid}/m${mission}-${Date.now()}`;
+  const opts = { contentType: 'image/jpeg', upsert: false };
+  const [a, b] = await Promise.all([
+    sb.storage.from('photos').upload(`${base}.jpg`, blob, opts),
+    sb.storage.from('photos').upload(`${base}_s.jpg`, small, opts),
+  ]);
+  if (a.error || b.error) throw a.error || b.error;
+  const { error } = await sb.from('submissions').insert({
+    participant_id: p.pid, nickname: p.nickname, mission,
+    photo_path: `${base}.jpg`, thumb_path: `${base}_s.jpg`,
+  });
+  if (error) throw error;
 }
+
+const sharing = () => ONLINE && profile()?.mode === 'share';
 
 /* ---------- 카메라 ---------- */
 async function openCamera(id) {
@@ -457,27 +482,55 @@ async function captureFile(file) {
 }
 
 /* ---------- 결과 ---------- */
+let pendingShot = null;     // 촬영했지만 아직 제출하지 않은 사진
+
 function showResult(shot) {
-  const { blob, thumb } = shot;
-  resultBlob = blob;
-  $('#upStatus').hidden = true;
-  upload(shot, current.id);
+  pendingShot = shot;
+  resultBlob = shot.blob;
   stopStream();
   $('#cam').classList.remove('open');
   const img = $('#resImg');
   if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
-  img.src = URL.createObjectURL(blob);
+  img.src = URL.createObjectURL(shot.blob);
+  $('#resTitle').textContent = `미션 ${current.id} 확인`;
+  $('#upStatus').hidden = true;
+  $('#sending').hidden = true;
+  // 동의한 참가자는 서버로 제출, 아니면 내 폰에 저장
+  $('#submit').textContent = sharing() ? '제출하기' : '완료 (내 폰에 저장)';
   $('#res').classList.add('open');
   document.body.style.overflow = 'hidden';
-
-  store.set('done' + current.id, '1');
-  const card = $('#card' + current.id);
-  card.classList.add('is-done');
-  card.querySelector('.shot').innerHTML = `<img class="done" src="${thumb}" alt="내가 찍은 반쪽">`;
 }
 
-async function saveResult() {
-  if (!resultBlob) return;
+async function submitResult() {
+  if (!pendingShot) return;
+  const btns = [$('#submit'), $('#retake'), $('#resClose')];
+  if (sharing()) {
+    $('#upStatus').hidden = true;
+    $('#sending').hidden = false;
+    btns.forEach((b) => { b.disabled = true; });
+    try {
+      await upload(pendingShot, current.id);
+    } catch (e) {
+      console.error(e);
+      $('#sending').hidden = true;
+      btns.forEach((b) => { b.disabled = false; });
+      $('#upStatus').hidden = false;
+      $('#upStatus').textContent = '전송에 실패했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.';
+      $('#submit').textContent = '다시 보내기';
+      return;
+    }
+    $('#sending').hidden = true;
+    btns.forEach((b) => { b.disabled = false; });
+  } else {
+    await saveToPhone();
+  }
+  markDone(current.id, pendingShot.thumb);
+  pendingShot = null;
+  $('#res').classList.remove('open');
+  showDone();
+}
+
+async function saveToPhone() {
   const name = `덕수궁_반쪽찾기_미션${current.id}.jpg`;
   const file = new File([resultBlob], name, { type: 'image/jpeg' });
   if (navigator.canShare?.({ files: [file] })) {
@@ -490,7 +543,34 @@ async function saveResult() {
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 
+function markDone(id, thumb) {
+  store.set('done' + id, '1');
+  store.set('thumb' + id, thumb);
+  paintDone(id, thumb);
+}
+
+function paintDone(id, thumb) {
+  const card = $('#card' + id);
+  card.classList.add('is-done');
+  if (thumb) card.querySelector('.shot').innerHTML = `<img class="done" src="${thumb}" alt="내가 찍은 반쪽">`;
+}
+
+function showDone() {
+  const done = MISSIONS.filter((m) => store.get('done' + m.id) === '1');
+  const all = done.length === MISSIONS.length;
+  const p = profile();
+  $('#doneTitle').textContent = all ? '모든 미션 완료! 🎉' : `미션 ${current.id} 완료!`;
+  $('#doneMsg').innerHTML = all
+    ? `${p?.nickname ? `<b>${escapeHtml(p.nickname)}</b>님, ` : ''}잃어버린 반쪽을 모두 찾았어요!<br>이 화면을 진행요원에게 보여주세요.`
+    : `${sharing() ? '사진이 잘 제출됐어요.' : '사진이 저장됐어요.'}<br>남은 미션 ${MISSIONS.length - done.length}개도 찾아보세요!`;
+  $('#doneDots').innerHTML = MISSIONS.map((m) =>
+    `<span class="${store.get('done' + m.id) === '1' ? 'on' : ''}">${m.id}</span>`).join('');
+  $('#doneLayer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
 function closeResult() {
+  pendingShot = null;
   $('#res').classList.remove('open');
   document.body.style.overflow = '';
 }
@@ -503,9 +583,11 @@ $('#camAlbum').onclick = () => $('#fileInput').click();
 $('#fileInput').onchange = (e) => { captureFile(e.target.files[0]); e.target.value = ''; };
 $('#resClose').onclick = closeResult;
 $('#retake').onclick = () => { closeResult(); openCamera(current.id); };
-$('#save').onclick = saveResult;
+$('#submit').onclick = submitResult;
+$('#doneOk').onclick = () => { $('#doneLayer').classList.remove('open'); document.body.style.overflow = ''; };
 
 renderCards();
+MISSIONS.forEach((m) => { if (store.get('done' + m.id) === '1') paintDone(m.id, store.get('thumb' + m.id)); });
 renderMe();
 </script>
 </body>
