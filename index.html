@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>임시대의원대회 1부 반쪽 찾기 | KDB생명보험지부 2026</title>
+<title>덕수궁 잃어버린 반쪽을 찾아라 | KDB생명보험지부 2026 임시대의원대회 1부</title>
 <meta name="description" content="KDB생명보험지부 2026년 임시대의원대회 · 덕수궁 사진 미션">
 <meta name="theme-color" content="#f5f2ec">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -17,7 +17,7 @@ if (new URLSearchParams(location.search).has('reset')) {
 }
 
 // 새 버전 자동 반영: 배포할 때 APP_VERSION 과 version.json 의 v 를 같이 올릴 것
-const APP_VERSION = '6';
+const APP_VERSION = '7';
 fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
   const u = new URL(location.href);
   if (v !== APP_VERSION && u.searchParams.get('v') !== v) {
@@ -65,6 +65,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   .event .org { background: var(--brand); color: #fff; padding: 5px 10px; border-radius: 999px; letter-spacing: 0; }
   .event .name { color: var(--ink-2); }
   h1 { margin: 18px 0 10px; font-size: clamp(30px, 8.6vw, 40px); line-height: 1.18; font-weight: 800; letter-spacing: -0.04em; }
+  h1 .kicker { display: block; font-size: .58em; font-weight: 700; color: var(--brand); letter-spacing: -0.02em; margin-bottom: 4px; }
   h1 em { font-style: normal; color: var(--accent); position: relative; }
   h1 em::after { content: ""; position: absolute; left: -2px; right: -2px; bottom: 4px; height: 10px; background: rgba(216,72,95,.14); border-radius: 3px; z-index: -1; }
   .lead { margin: 0; font-size: 15.5px; line-height: 1.65; color: var(--ink-2); word-break: keep-all; }
@@ -232,8 +233,8 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
 </div>
 
 <header>
-  <div class="event"><span class="org">KDB생명보험지부</span><span class="name">2026</span></div>
-  <h1>임시대의원대회 1부<br><em>반쪽</em> 찾기</h1>
+  <div class="event"><span class="org">KDB생명보험지부</span><span class="name">2026 임시대의원대회 1부</span></div>
+  <h1><span class="kicker">덕수궁</span>잃어버린 <em>반쪽</em>을 찾아라</h1>
   <p class="lead">덕수궁 곳곳에 숨은 같은 건물을 찾아, 사진 속 나머지 반쪽을 우리 조원들과 완성해보세요.</p>
   <ol class="steps">
     <li><b>STEP 1</b>건물 찾기</li>
@@ -355,7 +356,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   </form>
 </div>
 
-<script src="config.js?v=6"></script>
+<script src="config.js?v=7"></script>
 <script>
 // side: 미리 준비된 반쪽 사진이 놓이는 위치 ('left' | 'right')
 const MISSIONS = [
@@ -785,7 +786,7 @@ function finishSubmit() {
 async function saveAllToPhone() {
   const files = MISSIONS.map((m) => new File([shots[m.id].blob], `덕수궁_반쪽찾기_미션${m.id}.jpg`, { type: 'image/jpeg' }));
   if (navigator.canShare?.({ files })) {
-    try { await navigator.share({ files, title: '임시대의원대회 1부 반쪽 찾기' }); return; }
+    try { await navigator.share({ files, title: '덕수궁 잃어버린 반쪽을 찾아라' }); return; }
     catch (e) { if (e.name === 'AbortError') return; }
   }
   for (const f of files) {
