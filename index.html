@@ -9,6 +9,16 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 <script>
+// 새 버전 자동 반영: 배포할 때 APP_VERSION 과 version.json 의 v 를 같이 올릴 것
+const APP_VERSION = '3';
+fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
+  const u = new URL(location.href);
+  if (v !== APP_VERSION && u.searchParams.get('v') !== v) {
+    u.searchParams.set('v', v);
+    location.replace(u);
+  }
+}).catch(() => {});
+
 // 카카오톡 인앱 브라우저에서 열리면 기본 브라우저(아이폰 사파리 / 갤럭시 기본 브라우저)로 넘김
 (function () {
   if (!/KAKAOTALK/i.test(navigator.userAgent)) return;
@@ -243,7 +253,7 @@
   </form>
 </div>
 
-<script src="config.js"></script>
+<script src="config.js?v=3"></script>
 <script>
 // side: 미리 준비된 반쪽 사진이 놓이는 위치 ('left' | 'right')
 const MISSIONS = [
