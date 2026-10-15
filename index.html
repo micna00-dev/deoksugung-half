@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>덕수궁 잃어버린 반쪽을 찾아라 | KDB생명보험지부 2026 임시대의원대회 1부</title>
 <meta name="description" content="KDB생명보험지부 2026년 임시대의원대회 · 덕수궁 사진 미션">
 <meta name="theme-color" content="#f5f2ec">
@@ -17,7 +17,7 @@ if (new URLSearchParams(location.search).has('reset')) {
 }
 
 // 새 버전 자동 반영: 배포할 때 APP_VERSION 과 version.json 의 v 를 같이 올릴 것
-const APP_VERSION = '11';
+const APP_VERSION = '12';
 fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
   const u = new URL(location.href);
   if (v !== APP_VERSION && u.searchParams.get('v') !== v) {
@@ -51,6 +51,9 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; }
+  /* 화면 확대 막기: 두 번 탭 확대 차단 (버튼 연타 시 화면이 커지는 문제) */
+  html, body, button, input { touch-action: manipulation; }
+  #cam { touch-action: none; }
   body {
     font-family: "Pretendard Variable", Pretendard, -apple-system, system-ui, sans-serif;
     color: var(--ink); background: var(--bg);
@@ -371,7 +374,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   </form>
 </div>
 
-<script src="config.js?v=11"></script>
+<script src="config.js?v=12"></script>
 <script>
 // side: 미리 준비된 반쪽 사진이 놓이는 위치 ('left' | 'right')
 // 미션 사진(img/missionN.jpg)은 세로 3:4 원본 사진의 반쪽(600×1600)
@@ -654,6 +657,10 @@ function setZoom(z) {
   }
 }
 const digitalZoom = () => (hw ? zoom / hw.cur : zoom);
+
+// 사파리의 두 손가락 화면 확대 막기 (카메라 화면의 핀치 줌은 위에서 직접 처리)
+['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault(), { passive: false }));
+document.addEventListener('dblclick', (e) => e.preventDefault(), { passive: false });
 
 $('#zoomRange').oninput = (e) => setZoom(+e.target.value);
 $('#zoomIn').onclick = () => setZoom(zoom + 0.1);
