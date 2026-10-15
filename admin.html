@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script>
 // 새 버전 자동 반영 (index.html 과 같은 version.json 사용)
-const APP_VERSION = '9';
+const APP_VERSION = '10';
 fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) => {
   const u = new URL(location.href);
   if (v !== APP_VERSION && u.searchParams.get('v') !== v) { u.searchParams.set('v', v); location.replace(u); }
@@ -68,7 +68,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   .chips .wit { color: #6b3fa0; }
   .pending { font-size: 12.5px; color: var(--ink-3); }
   .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .th { position: relative; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; background: #f3f1ec; border: 0; padding: 0; cursor: zoom-in; }
+  .th { position: relative; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden; background: #f3f1ec; border: 0; padding: 0; cursor: zoom-in; }
   .th img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
   .th .lb { position: absolute; left: 6px; top: 6px; background: rgba(20,24,22,.66); color: #fff; font-size: 11px; font-weight: 700; padding: 3px 7px; border-radius: 999px; }
   .th .sc { position: absolute; right: 6px; bottom: 6px; background: #fff; color: var(--ink); font-size: 12px; font-weight: 800; padding: 3px 7px; border-radius: 999px; box-shadow: var(--shadow); }
@@ -127,7 +127,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
   <section id="board" hidden>
     <div class="stats">
       <div class="stat"><b id="sPeople">0</b><span>참가 조(기기)</span></div>
-      <div class="stat"><b id="sDone">0</b><span>3장 모두 전송</span></div>
+      <div class="stat"><b id="sDone">0</b><span>6장 모두 전송</span></div>
       <div class="stat"><b id="sPhotos">0</b><span>받은 사진</span></div>
       <div class="stat"><b id="sScored">0</b><span>AI 채점 완료</span></div>
     </div>
@@ -188,7 +188,7 @@ fetch('version.json', { cache: 'no-store' }).then((r) => r.json()).then(({ v }) 
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="config.js?v=9"></script>
+<script src="config.js?v=10"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
@@ -208,6 +208,8 @@ const CRIT = [
   { key: 'teamwork',    label: '조원 참여', max: 20 },
 ];
 const WIT = { key: 'wit', label: '재치', max: 20 };
+const MIDS = [1, 2, 3, 4, 5, 6];   // 미션 번호 (참가자 페이지 MISSIONS 와 같게)
+const N = MIDS.length;
 const PRIZES = [
   { tag: '1등', prize: '올리브영 상품권 3만원', color: '#e2b23a' },
   { tag: '2등', prize: '올리브영 상품권 2만원', color: '#9aa5ad' },
@@ -259,12 +261,12 @@ $('#loginForm').onsubmit = async (e) => {
 $('#logout').onclick = async () => { await sb.auth.signOut(); showSession(); };
 
 /* ---------- 점수 계산 ---------- */
-// 조 점수 = 미션 3장 점수의 평균 (빠진 미션은 0점). 세부 항목도 같은 방식
+// 조 점수 = 미션 6장 점수의 평균 (빠진 미션은 0점). 세부 항목도 같은 방식
 function teamScore(p) {
   const sum = { total: 0, wit: 0 };
   CRIT.forEach((c) => { sum[c.key] = 0; });
   let scored = 0, photos = 0;
-  for (const m of [1, 2, 3]) {
+  for (const m of MIDS) {
     const r = p.missions[m];
     if (!r) continue;
     photos++;
@@ -275,7 +277,7 @@ function teamScore(p) {
     CRIT.forEach((c) => { sum[c.key] += r.score[c.key]; });
   }
   const avg = {};
-  Object.keys(sum).forEach((k) => { avg[k] = Math.round((sum[k] / 3) * 10) / 10; });
+  Object.keys(sum).forEach((k) => { avg[k] = Math.round((sum[k] / N) * 10) / 10; });
   return { ...avg, scored, photos, complete: photos > 0 && scored === photos };
 }
 
@@ -333,10 +335,10 @@ async function load() {
 
   const latest = people.flatMap((p) => Object.values(p.missions));
   $('#sPeople').textContent = people.length;
-  $('#sDone').textContent = people.filter((p) => [1, 2, 3].every((m) => p.missions[m])).length;
+  $('#sDone').textContent = people.filter((p) => MIDS.every((m) => p.missions[m])).length;
   $('#sPhotos').textContent = latest.length;
   $('#sScored').textContent = `${latest.filter((r) => r.score).length}/${latest.length}`;
-  $('#updated').textContent = `업데이트 ${new Date().toLocaleTimeString('ko-KR')} · 순위 = 미션 3장 평균 점수(빠진 미션 0점)`
+  $('#updated').textContent = `업데이트 ${new Date().toLocaleTimeString('ko-KR')} · 순위 = 미션 6장 평균 점수(빠진 미션 0점)`
     + (scErr ? ' · ⚠ 점수 표를 불러오지 못했어요 (supabase-scores.sql 실행 필요)' : '');
   render();
 }
@@ -353,7 +355,7 @@ function render() {
   const sp = specialPid();
   $('#list').innerHTML = list.map((p) => {
     const n = Object.keys(p.missions).length;
-    const thumbs = [1, 2, 3].map((m) => {
+    const thumbs = MIDS.map((m) => {
       const r = p.missions[m];
       if (!r) return `<div class="th none">미션 ${m} 없음</div>`;
       return `<button class="th" data-view="${esc(p.pid)}" data-m="${m}"><img src="${esc(r.thumbUrl || '')}" alt="${esc(p.nickname)} 미션 ${m}" loading="lazy"><span class="lb">미션 ${m}</span>${
@@ -367,7 +369,7 @@ function render() {
     return `<article class="team">
       <div class="team-head">
         <div class="l">${rk}<div><div class="name">${esc(p.nickname)}</div><div class="meta">${fmt(p.last)} · 기기 ${esc(p.pid.slice(0, 4))}</div></div></div>
-        <span class="pill ${n === 3 ? 'ok' : ''}">${n === 3 ? '3장 완료' : n + ' / 3'}</span>
+        <span class="pill ${n === N ? 'ok' : ''}">${n === N ? N + '장 완료' : n + ' / ' + N}</span>
       </div>
       ${score}${pending}
       <div class="thumbs">${thumbs}</div>
@@ -434,7 +436,7 @@ async function collect(ps, onProgress) {
   const files = [];
   const total = ps.reduce((n, p) => n + Object.keys(p.missions).length, 0);
   for (const p of ps) {
-    for (const m of [1, 2, 3]) {
+    for (const m of MIDS) {
       if (!p.missions[m]) continue;
       files.push(await fetchFile(p, m, names[p.nickname] > 1));
       onProgress?.(files.length, total);
@@ -581,7 +583,7 @@ async function drawResults() {
   const rest = ranked.filter((p, i) => i >= 3 && p.pid !== spPid);
   const winners = [...top.map((p, i) => ({ p, ...PRIZES[i] })), ...(sp ? [{ p: sp, ...SPECIAL }] : [])];
 
-  const CARD = 300, GAP = 22, ROW = 58;
+  const CARD = 340, GAP = 22, ROW = 58;
   const H = 300 + winners.length * (CARD + GAP) + (rest.length ? 120 + rest.length * ROW : 0) + 190;
   const c = document.createElement('canvas');
   c.width = W; c.height = H;
@@ -598,7 +600,7 @@ async function drawResults() {
   g.fillText('결과 발표', PAD, 205);
 
   // 수상 조 카드
-  const thumbs = await Promise.all(winners.map((w) => Promise.all([1, 2, 3].map((m) => loadThumb(w.p.missions[m]).catch(() => null)))));
+  const thumbs = await Promise.all(winners.map((w) => Promise.all(MIDS.map((m) => loadThumb(w.p.missions[m]).catch(() => null)))));
   let y = 290;
   winners.forEach((w, i) => {
     const p = w.p, ts = p.ts;
@@ -636,24 +638,25 @@ async function drawResults() {
     parts.push(w.sub ? `총점 ${ts.total}/100` : `재치 ${ts.wit}/${WIT.max}`);
     g.fillText(parts.join('   ·   '), x, y + 196);
 
-    // 미션 사진 3장
-    const tw = 150, th = 70, ty = y + 218;
+    // 미션 사진 6장 + 미션별 점수
+    const tw = 134, th = 100, ty = y + 218;
     thumbs[i].forEach((bmp, k) => {
-      const tx = x + k * (tw + 12);
+      const tx = x + k * (tw + 10);
       g.save(); roundRect(g, tx, ty, tw, th, 12); g.clip();
       g.fillStyle = '#eceae4'; g.fillRect(tx, ty, tw, th);
       if (bmp) {
-        const sh = bmp.width * th / tw;   // 위쪽(건물)부터 잘라서 표시
-        g.drawImage(bmp, 0, 0, bmp.width, Math.min(sh, bmp.height), tx, ty, tw, th);
+        const sh = bmp.width * th / tw;   // 사진(아래 글자 띠 제외) 가운데 부분을 잘라서 표시
+        const sy = Math.max(0, (bmp.height * 0.92 - sh) / 2);
+        g.drawImage(bmp, 0, sy, bmp.width, Math.min(sh, bmp.height), tx, ty, tw, th);
       }
       g.restore();
-      g.fillStyle = 'rgba(20,24,22,.66)'; roundRect(g, tx + 8, ty + 8, 66, 26, 13); g.fill();
-      g.fillStyle = '#fff'; g.font = F(700, 15); g.fillText(`미션 ${k + 1}`, tx + 17, ty + 27);
+      const sc = p.missions[MIDS[k]]?.score?.total;
+      const tag = `${MIDS[k]} · ${sc ?? '-'}`;
+      g.font = F(700, 15);
+      const bw = g.measureText(tag).width + 18;
+      g.fillStyle = 'rgba(20,24,22,.7)'; roundRect(g, tx + 6, ty + 6, bw, 26, 13); g.fill();
+      g.fillStyle = '#fff'; g.fillText(tag, tx + 15, ty + 25);
     });
-    // 한 줄 평 대신 미션별 점수
-    g.font = F(600, 19); g.fillStyle = '#98a19c';
-    const per = [1, 2, 3].map((m) => `미션${m} ${p.missions[m]?.score?.total ?? '-'}`).join('  ·  ');
-    g.textAlign = 'right'; g.fillText(per, W - PAD - 36, ty + 44); g.textAlign = 'left';
 
     y += CARD + GAP;
   });
@@ -682,7 +685,7 @@ async function drawResults() {
   g.font = F(500, 19); g.fillStyle = '#5b6661';
   const lines = [
     `${CRIT.map((cr) => `${cr.label} ${cr.max}점`).join(' + ')} = 100점   |   재치 ${WIT.max}점 (특별상 전용, 총점 제외)`,
-    '미션 사진마다 AI(Claude)가 같은 기준으로 채점 → 조 점수는 미션 3장 평균 (제출하지 않은 미션은 0점)',
+    '미션 사진마다 AI(Claude)가 같은 기준으로 채점 → 조 점수는 미션 6장 평균 (제출하지 않은 미션은 0점)',
     '동점일 때: 선 연결 → 크기·원근 → 먼저 제출한 조 순   |   특별상: 1~3등을 제외하고 재치 점수가 가장 높은 조',
   ];
   lines.forEach((t, i) => g.fillText(t, PAD, y + 38 + i * 32));

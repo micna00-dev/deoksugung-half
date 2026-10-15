@@ -7,7 +7,7 @@ create table if not exists public.submissions (
   created_at     timestamptz not null default now(),
   participant_id uuid        not null,
   nickname       text        not null check (char_length(nickname) between 1 and 20),
-  mission        smallint    not null check (mission between 1 and 3),
+  mission        smallint    not null check (mission between 1 and 6),
   photo_path     text        not null,
   thumb_path     text        not null
 );
