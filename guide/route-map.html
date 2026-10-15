@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>미션 동선</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root { --pine: #1f5d43; --red: #d8485f; --ink: #1d211f; --muted: #6f6c66; --line: #e5dfd4; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 2016px; height: 1356px; }
+  body { position: relative; background: #fff; font-family: "Pretendard Variable", Pretendard, sans-serif; letter-spacing: -0.02em; color: var(--ink); overflow: hidden; }
+  .map { position: absolute; inset: 0; width: 2016px; height: 1356px; }
+  svg.route { position: absolute; inset: 0; }
+
+  /* 우측 상단 행사명 */
+  .title { position: absolute; top: 56px; right: 64px; text-align: right; }
+  .title .ev { font-size: 30px; font-weight: 700; color: var(--pine); display: inline-flex; align-items: center; gap: 12px; }
+  .title .ev::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
+  .title h1 { margin-top: 10px; font-size: 76px; font-weight: 800; line-height: 1.08; letter-spacing: -0.05em; }
+  .title h1 small { display: block; font-size: 40px; font-weight: 700; color: var(--pine); letter-spacing: -0.03em; margin-bottom: 4px; }
+  .title h1 em { font-style: normal; color: var(--red); }
+  .title .tag { margin-top: 18px; display: inline-block; padding: 10px 20px; border-radius: 8px; background: var(--pine); color: #fff; font-size: 28px; font-weight: 700; }
+
+  /* 좌측 하단 코스 */
+  .course { position: absolute; right: 64px; bottom: 56px; width: 500px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 30px 34px; box-shadow: 0 2px 16px rgba(0,0,0,.04); }
+  .course h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.04em; display: flex; justify-content: space-between; align-items: baseline; }
+  .course h2 small { font-size: 22px; font-weight: 600; color: var(--muted); }
+  .course ol { list-style: none; margin-top: 16px; position: relative; }
+  .course ol::before { content: ""; position: absolute; left: 21px; top: 22px; bottom: 22px; border-left: 4px dashed var(--red); }
+  .course li { position: relative; display: flex; align-items: center; gap: 18px; padding: 8px 0; font-size: 30px; font-weight: 700; }
+  .course li b { flex: none; width: 46px; height: 46px; border-radius: 50%; background: var(--pine); color: #fff; font-size: 24px; font-weight: 800; display: grid; place-items: center; border: 3px solid #fff; box-shadow: 0 0 0 2px var(--pine); }
+  .course li span { font-size: 22px; font-weight: 500; color: var(--muted); margin-left: -6px; }
+  .course li.start b { background: var(--ink); box-shadow: 0 0 0 2px var(--ink); font-size: 17px; }
+  .course li.via { font-size: 24px; font-weight: 600; color: var(--muted); padding: 2px 0; }
+  .course li.via b { width: 46px; height: 22px; background: none; border: none; box-shadow: none; }
+  .course li.via b::before { content: ""; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 4px solid var(--red); }
+  .course li.pair b + b { margin-left: -12px; }
+  .course li.end b { background: var(--red); box-shadow: 0 0 0 2px var(--red); }
+</style>
+</head>
+<body>
+  <img class="map" src="map-source.png" alt="">
+
+  <svg class="route" viewBox="0 0 2016 1356" width="2016" height="1356">
+    <defs>
+      <marker id="arw" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto">
+        <path d="M1 1 L9 5 L1 9 z" fill="#d8485f"/>
+      </marker>
+    </defs>
+    <!-- 광명문 → 석조전 → 돈덕전 → 준명당·즉조당·석어당 → 덕홍전 -->
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path id="r" d="M1078 1122 L1045 1065 L978 1010 L965 1003 L880 965 L760 905 L668 822 L615 762 L540 700 L555 625 L588 612 L680 598 L760 535 L860 512 L795 482 L748 430 L750 350 L805 320 L878 300 L925 345 L998 382 L998 495 L1015 565 L1012 645 L1022 700 L1040 755"
+            stroke="#fff" stroke-width="22"/>
+      <path d="M1078 1122 L1045 1065 L978 1010 L965 1003 L880 965 L760 905 L668 822 L615 762 L540 700 L555 625 L588 612 L680 598 L760 535 L860 512 L795 482 L748 430 L750 350 L805 320 L878 300 L925 345 L998 382 L998 495 L1015 565 L1012 645 L1022 700 L1040 755"
+            stroke="#d8485f" stroke-width="11" stroke-dasharray="22 14"/>
+    </g>
+    <!-- 진행 방향 화살표 -->
+    <g fill="none">
+      <path d="M1062 1094 L1054 1080" marker-end="url(#arw)" stroke="#d8485f" stroke-width="11"/>
+      <path d="M790 920 L765 908" marker-end="url(#arw)" stroke="#d8485f" stroke-width="11"/>
+      <path d="M730 560 L748 545" marker-end="url(#arw)" stroke="#d8485f" stroke-width="11"/>
+      <path d="M749 400 L749 375" marker-end="url(#arw)" stroke="#d8485f" stroke-width="11"/>
+      <path d="M998 420 L998 450" marker-end="url(#arw)" stroke="#d8485f" stroke-width="11"/>
+    </g>
+    <!-- 정류지 번호 -->
+    <!-- 출발 -->
+    <g transform="translate(1078 1122)" font-family="Pretendard Variable, Pretendard, sans-serif" font-weight="800" font-size="26" text-anchor="middle">
+      <rect x="-46" y="-25" width="92" height="50" rx="25" fill="#1d211f" stroke="#fff" stroke-width="5"/>
+      <text y="9" fill="#fff">출발</text>
+    </g>
+    <g font-family="Pretendard Variable, Pretendard, sans-serif" font-weight="800" font-size="28" text-anchor="middle">
+      <g transform="translate(965 1003)"><circle r="27" fill="#1f5d43" stroke="#fff" stroke-width="5"/><text y="11" fill="#fff">1</text></g>
+      <g transform="translate(860 512)"><circle r="27" fill="#1f5d43" stroke="#fff" stroke-width="5"/><text y="11" fill="#fff">2</text></g>
+      <g transform="translate(878 296)"><circle r="27" fill="#1f5d43" stroke="#fff" stroke-width="5"/><text y="11" fill="#fff">3</text></g>
+      <g transform="translate(1015 565)"><circle r="27" fill="#1f5d43" stroke="#fff" stroke-width="5"/><text y="11" fill="#fff">4</text></g>
+      <g transform="translate(1012 645)"><circle r="27" fill="#1f5d43" stroke="#fff" stroke-width="5"/><text y="11" fill="#fff">5</text></g>
+      <g transform="translate(1040 755)"><circle r="27" fill="#d8485f" stroke="#fff" stroke-width="5"/><text y="11" fill="#fff">6</text></g>
+    </g>
+  </svg>
+
+  <div class="title">
+    <div class="ev">KDB생명보험지부 2026년 임시대의원대회 1부</div>
+    <h1><small>덕수궁</small>잃어버린 <em>반쪽</em>을 찾아라</h1>
+    <div class="tag">미션 동선 · 14:00 ~ 14:40</div>
+  </div>
+
+  <div class="course">
+    <h2>추천 코스 <small>대한문에서 출발</small></h2>
+    <ol>
+      <li class="start"><b>출발</b>대한문</li>
+      <li><b>1</b>광명문 <span>앞길</span></li>
+      <li class="via"><b></b>중화문 → 분수대 <span>지나서</span></li>
+      <li><b>2</b>석조전</li>
+      <li><b>3</b>돈덕전</li>
+      <li class="pair"><b>4</b><b>5</b>준명당·즉조당·석어당 <span>일대</span></li>
+      <li class="end"><b>6</b>덕홍전</li>
+    </ol>
+  </div>
+</body>
+</html>
